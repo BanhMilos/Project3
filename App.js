@@ -6,6 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import MainScreen from "./src/screens/MainScreen";
 import PlansScreen from "./src/screens/PlansScreen";
 import PlanDetailsScreen from "./src/screens/PlanDetailsScreen";
+import ChatScreen from "./src/screens/ChatScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -16,7 +17,7 @@ const BottomTabs = () => {
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen name="Today" component={MainScreen} />
       <Tab.Screen name="Plans" component={PlansScreen} />
-      <Tab.Screen name="Chat" component={MainScreen} />
+      <Tab.Screen name="Chat" component={ChatScreen} />
       <Tab.Screen name="More" component={MainScreen} />
     </Tab.Navigator>
   );
