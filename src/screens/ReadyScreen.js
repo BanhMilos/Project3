@@ -2,8 +2,10 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 import CustomButton from "../components/Util/CustomButton";
 import * as scale from "./scale";
+import { useNavigation } from "@react-navigation/native";
 
 const ReadyScreen = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.contentWrapper}>
@@ -32,6 +34,7 @@ const ReadyScreen = () => {
         algs={"center"}
         textSize={scale.buttonTextSize}
         pos={"absolute"}
+        onPress={() => navigation.navigate("Allergic")}
       />
     </View>
   );

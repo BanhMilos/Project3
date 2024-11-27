@@ -2,10 +2,11 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
 import * as scale from "../../screens/scale";
 import CustomButton from "../Util/CustomButton";
+import { useNavigation } from "@react-navigation/native";
 
 const GenderScreen = () => {
   const [selectedGender, setSelectedGender] = useState(null); // State to track selected gender
-
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Text style={[styles.title, { fontSize: scale.titleSize - 13 }]}>
@@ -106,6 +107,7 @@ const GenderScreen = () => {
           algs={"center"}
           textSize={scale.buttonTextSize}
           pos={"absolute"}
+          onPress={() => navigation.navigate("Goal")}
         />
       )}
     </View>

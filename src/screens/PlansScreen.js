@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import plans from "./plans";
 import { useNavigation } from "@react-navigation/native";
-import PlanDetailsScreen from "./PlanDetailsScreen";
 
 export default function PlansScreen() {
   const [searchText, setSearchText] = useState("");

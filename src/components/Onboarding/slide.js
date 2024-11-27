@@ -1,7 +1,6 @@
 import AlergicScreen from "./AllergicScreen";
 import GenderScreen from "./GenderScreen";
 import GoalScreen from "./GoalScreen";
-import OnboardingScreenTwo from "./OnboardingScreenTwo";
 
 export default [
   {

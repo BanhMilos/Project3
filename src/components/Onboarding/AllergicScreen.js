@@ -9,10 +9,12 @@ import {
 import allergenData from "./allergenData"; // Your allergen data
 import * as scale from "../../screens/scale";
 import CustomButton from "../Util/CustomButton";
+import { useNavigation } from "@react-navigation/native";
+import GenderScreen from "./GenderScreen";
 
 const AlergicScreen = () => {
   const [selected, setSelected] = useState([]);
-
+  const navigation = useNavigation();
   const handlePress = (item) => {
     setSelected((prevSelected) =>
       prevSelected.includes(item.text)
@@ -78,6 +80,7 @@ const AlergicScreen = () => {
         algs={"center"}
         textSize={scale.buttonTextSize}
         pos={"absolute"}
+        onPress={() => navigation.navigate("Gender")}
       />
     </View>
   );

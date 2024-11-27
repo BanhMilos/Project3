@@ -2,10 +2,11 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
 import * as scale from "../../screens/scale";
 import CustomButton from "../Util/CustomButton";
+import { useNavigation } from "@react-navigation/native";
 
 const GoalScreen = () => {
   const [selectedGoal, setSelectedGoal] = useState(null);
-
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Text style={[styles.title, { fontSize: scale.titleSize - 13 }]}>
@@ -110,6 +111,7 @@ const GoalScreen = () => {
           algs={"center"}
           textSize={scale.buttonTextSize}
           pos={"absolute"}
+          onPress={() => navigation.navigate("Home")}
         />
       )}
     </View>

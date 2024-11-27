@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import { View, FlatList, StyleSheet, Animated, Dimensions } from "react-native";
 import slide from "./slide";
-import SVGLine from "./SVGLine";
 
 const { width } = Dimensions.get("window");
 

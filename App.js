@@ -7,6 +7,11 @@ import MainScreen from "./src/screens/MainScreen";
 import PlansScreen from "./src/screens/PlansScreen";
 import PlanDetailsScreen from "./src/screens/PlanDetailsScreen";
 import ChatScreen from "./src/screens/ChatScreen";
+import Onboarding from "./src/components/Onboarding/Onboarding";
+import GenderScreen from "./src/components/Onboarding/GenderScreen";
+import AlergicScreen from "./src/components/Onboarding/AllergicScreen";
+import GoalScreen from "./src/components/Onboarding/GoalScreen";
+import ReadyScreen from "./src/screens/ReadyScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -27,12 +32,17 @@ const BottomTabs = () => {
 const AppStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Ready" component={ReadyScreen} />
+      <Stack.Screen name="Onboarding" component={Onboarding} />
+      <Stack.Screen name="Allergic" component={AlergicScreen} />
+      <Stack.Screen name="Gender" component={GenderScreen} />
+      <Stack.Screen name="Goal" component={GoalScreen} />
       <Stack.Screen name="Home" component={BottomTabs} />
       <Stack.Screen
         name="PlanDetails"
         component={PlanDetailsScreen}
         options={{
-          tabBarStyle: { display: "none" }, // Hide the bottom tab bar on PlanDetails screen
+          tabBarStyle: { display: "none" },
         }}
       />
     </Stack.Navigator>

@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
   View,
@@ -7,29 +8,29 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-
+import * as scale from "./scale";
+import CustomButton from "../components/Util/CustomButton";
 export default function PlanDetailsScreen() {
   const [selectedTab, setSelectedTab] = useState("Overview");
-
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      {/* Header Section */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
-            /* Add back navigation functionality here */
-          }}
-        >
-          <Text style={styles.backArrow}>←</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Plan Details</Text>
-      </View>
-
-      {/* Image Section */}
       <Image
         source={require("../../assets/images/placeholder.png")}
         style={styles.image}
       />
+      {/* Header Section */}
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      >
+        <Text style={{ fontSize: 30 }}>←</Text>
+      </TouchableOpacity>
+      <Text style={styles.headerTitle}>Plan Details</Text>
+
+      {/* Image Section */}
 
       {/* Plan Title */}
       <Text style={styles.planTitle}>Healthy Kickstart</Text>
@@ -61,18 +62,28 @@ export default function PlanDetailsScreen() {
       {/* Content Section */}
       <ScrollView style={styles.contentContainer}>
         {selectedTab === "Overview" ? (
-          <View>
+          <View style={{ paddingBottom: 120 }}>
             <Text style={styles.description}>
               Start your health journey off on the right foot by focusing on the
               basics: reducing your added sugar intake and eating more fruits
               and vegetables. Our registered dietitian helps you stay on track
               with easy daily goals and tips, meal inspiration, and
-              accountability.
+              accountability. Start your health journey off on the right foot by
+              focusing on the basics: reducing your added sugar intake and
+              eating more fruits and vegetables. Our registered dietitian helps
+              you stay on track with easy daily goals and tips, meal
+              inspiration, and accountability. Start your health journey off on
+              the right foot by focusing on the basics: reducing your added
+              sugar intake and eating more fruits and vegetables. Our registered
+              dietitian helps you stay on track with easy daily goals and tips,
+              meal inspiration, and accountability. Start your health journey
+              off on the right foot by focusing on the basics: reducing your
+              added sugar intake and eating more fruits and vegetables. Our
+              registered dietitian helps you stay on track with easy daily goals
+              and tips, meal inspiration, and accountability.
             </Text>
             <Text style={styles.disclaimer}>
-              Consult your physician before starting any plan. Neither
-              MyFitnessPal nor its affiliates will be liable for any injury
-              sustained as a result of your participation.
+              Something something disclaimer
             </Text>
 
             <View style={styles.details}>
@@ -105,9 +116,6 @@ export default function PlanDetailsScreen() {
             </Text>
 
             {/* Call-to-Action Button */}
-            <TouchableOpacity style={styles.ctaButton}>
-              <Text style={styles.ctaButtonText}>TRY A PLAN FOR FREE</Text>
-            </TouchableOpacity>
           </View>
         ) : (
           <Text style={styles.scheduleText}>
@@ -115,6 +123,16 @@ export default function PlanDetailsScreen() {
           </Text>
         )}
       </ScrollView>
+      <CustomButton
+        text={"TRY A PLAN FOR FREE"}
+        bgColor={"#333333"}
+        Ypos={scale.buttonYPos}
+        width={scale.buttonWidth}
+        height={scale.buttonHeight}
+        algs={"center"}
+        textSize={scale.buttonTextSize}
+        pos={"absolute"}
+      />
     </View>
   );
 }
@@ -124,21 +142,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FAF9F6",
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 16,
-    backgroundColor: "#000",
-  },
-  backArrow: {
-    color: "#fff",
-    fontSize: 20,
+  backButton: {
+    color: "#000",
+    position: "absolute",
+    top: scale.backbuttonY,
+    left: scale.backButtonX,
   },
   headerTitle: {
-    color: "#fff",
-    fontSize: 18,
+    color: "#000",
+    fontSize: 20,
     fontWeight: "bold",
-    marginLeft: 10,
+    position: "absolute",
+    top: scale.headerTitleY,
+    alignSelf: "center",
   },
   image: {
     width: "100%",
@@ -168,7 +184,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#4E9AF1",
   },
   contentContainer: {
-    padding: 16,
+    paddingHorizontal: 16,
   },
   description: {
     fontSize: 16,
