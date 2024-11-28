@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function PlansScreen() {
   const [searchText, setSearchText] = useState("");
   const nav = useNavigation();
+
   // Filter the plans based on the search text
   const filteredPlans = plans.filter((plan) =>
     plan.title.toLowerCase().includes(searchText.toLowerCase())
@@ -31,7 +32,7 @@ export default function PlansScreen() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Find a Plan</Text>
         <Text style={styles.sectionSubtitle}>
-          Meal plans, workout plans and more. Start a plan, follow along, and
+          Meal plans, workout plans, and more. Start a plan, follow along, and
           reach your goals.
         </Text>
 
@@ -48,23 +49,27 @@ export default function PlansScreen() {
       </View>
 
       <View style={styles.availablePlans}>
-        <FlatList
-          data={filteredPlans}
-          keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator="false"
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.planCard}
-              onPress={() => nav.navigate("PlanDetails")}
-            >
-              <Image source={item.image} style={styles.planImage} />
-              <View style={styles.contentWrapper}>
-                <Text style={styles.planTitle}>{item.title}</Text>
-                <Text style={styles.planDuration}>{item.duration}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-        />
+        {filteredPlans.length === 0 ? (
+          <Text style={styles.noResultsText}>No plans found.</Text>
+        ) : (
+          <FlatList
+            data={filteredPlans}
+            keyExtractor={(item) => item.id.toString()}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.planCard}
+                onPress={() => nav.navigate("PlanDetails", { planId: item.id })}
+              >
+                <Image source={item.image} style={styles.planImage} />
+                <View style={styles.contentWrapper}>
+                  <Text style={styles.planTitle}>{item.title}</Text>
+                  <Text style={styles.planDuration}>{item.duration}</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        )}
       </View>
     </View>
   );
@@ -98,7 +103,6 @@ const styles = StyleSheet.create({
     color: "#4E9AF1",
     fontSize: 14,
   },
-
   searchContainer: {
     marginBottom: 10,
   },
@@ -109,7 +113,6 @@ const styles = StyleSheet.create({
     color: "#2C3E50",
     fontSize: 16,
   },
-
   section: {
     padding: 16,
   },
@@ -118,37 +121,24 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
   },
-  secondSection: {
-    color: "#2C3E50",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
   sectionSubtitle: {
     color: "#2C3E50",
     fontSize: 16,
     marginTop: 4,
     marginBottom: 16,
   },
-
-  filterButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 16,
-  },
-  filterButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#A9A9A9",
-  },
-
   availablePlans: {
     flex: 1,
     paddingHorizontal: 16,
   },
   planCard: {
     marginBottom: 25,
+    backgroundColor: "#FFF",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
   },
   planImage: {
     width: "100%",
@@ -157,6 +147,7 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     left: 15,
+    paddingVertical: 10,
   },
   planTitle: {
     color: "#2C3E50",
@@ -167,5 +158,11 @@ const styles = StyleSheet.create({
   planDuration: {
     color: "#A9A9A9",
     fontSize: 14,
+  },
+  noResultsText: {
+    color: "#A9A9A9",
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 20,
   },
 });

@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
   View,
@@ -10,59 +9,48 @@ import {
 } from "react-native";
 import * as scale from "./scale";
 import CustomButton from "../components/Util/CustomButton";
+import { useNavigation } from "@react-navigation/native";
+
 export default function PlanDetailsScreen() {
   const [selectedTab, setSelectedTab] = useState("Overview");
   const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <Image
         source={require("../../assets/images/placeholder.png")}
         style={styles.image}
       />
+
       {/* Header Section */}
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => {
-          navigation.goBack();
-        }}
+        onPress={() => navigation.goBack()}
       >
-        <Text style={{ fontSize: 30 }}>←</Text>
+        <Text style={styles.backIcon}>←</Text>
       </TouchableOpacity>
       <Text style={styles.headerTitle}>Plan Details</Text>
-
-      {/* Image Section */}
 
       {/* Plan Title */}
       <Text style={styles.planTitle}>Healthy Kickstart</Text>
 
       {/* Tab Navigation */}
       <View style={styles.tabContainer}>
-        <TouchableOpacity onPress={() => setSelectedTab("Overview")}>
-          <Text
-            style={[
-              styles.tabText,
-              selectedTab === "Overview" && styles.activeTab,
-            ]}
-          >
-            OVERVIEW
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setSelectedTab("Schedule")}>
-          <Text
-            style={[
-              styles.tabText,
-              selectedTab === "Schedule" && styles.activeTab,
-            ]}
-          >
-            SCHEDULE
-          </Text>
-        </TouchableOpacity>
+        {["Overview", "Schedule"].map((tab) => (
+          <TouchableOpacity key={tab} onPress={() => setSelectedTab(tab)}>
+            <Text
+              style={[styles.tabText, selectedTab === tab && styles.activeTab]}
+            >
+              {tab.toUpperCase()}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
 
       {/* Content Section */}
       <ScrollView style={styles.contentContainer}>
         {selectedTab === "Overview" ? (
-          <View style={{ paddingBottom: 120 }}>
+          <View style={styles.overviewContent}>
             <Text style={styles.description}>
               Start your health journey off on the right foot by focusing on the
               basics: reducing your added sugar intake and eating more fruits
@@ -85,7 +73,6 @@ export default function PlanDetailsScreen() {
             <Text style={styles.disclaimer}>
               Something something disclaimer
             </Text>
-
             <View style={styles.details}>
               <Text style={styles.detailLabel}>Duration:</Text>
               <Text style={styles.detailValue}>28 Days</Text>
@@ -101,21 +88,14 @@ export default function PlanDetailsScreen() {
 
             {/* "Choose this plan if" Section */}
             <Text style={styles.sectionTitle}>Choose this plan if</Text>
-            <Text style={styles.bulletPoint}>
-              • You want to reduce added sugar in your diet
-            </Text>
-            <Text style={styles.bulletPoint}>
-              • You have trouble with sugar cravings
-            </Text>
-            <Text style={styles.bulletPoint}>
-              • You have trouble getting enough fruits and vegetables
-            </Text>
-            <Text style={styles.bulletPoint}>
-              • You're either at the beginning of a health journey or looking to
-              reset your journey with the basics
-            </Text>
-
-            {/* Call-to-Action Button */}
+            {[
+              "You want to reduce added sugar in your diet",
+              "You have trouble with sugar cravings",
+            ].map((item, index) => (
+              <Text key={index} style={styles.bulletPoint}>
+                • {item}
+              </Text>
+            ))}
           </View>
         ) : (
           <Text style={styles.scheduleText}>
@@ -123,16 +103,9 @@ export default function PlanDetailsScreen() {
           </Text>
         )}
       </ScrollView>
-      <CustomButton
-        text={"TRY A PLAN FOR FREE"}
-        bgColor={"#333333"}
-        Ypos={scale.buttonYPos}
-        width={scale.buttonWidth}
-        height={scale.buttonHeight}
-        algs={"center"}
-        textSize={scale.buttonTextSize}
-        pos={"absolute"}
-      />
+
+      {/* Call-to-Action Button */}
+      <CustomButton text={"TRY A PLAN FOR FREE"} bgColor={"#333333"} />
     </View>
   );
 }
@@ -143,10 +116,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAF9F6",
   },
   backButton: {
-    color: "#000",
     position: "absolute",
-    top: scale.backbuttonY,
+    top: scale.backButtonY,
     left: scale.backButtonX,
+  },
+  backIcon: {
+    fontSize: 30,
   },
   headerTitle: {
     color: "#000",
@@ -186,6 +161,9 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 16,
   },
+  overviewContent: {
+    paddingBottom: 120,
+  },
   description: {
     fontSize: 16,
     color: "#2C3E50",
@@ -218,18 +196,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#2C3E50",
     marginBottom: 8,
-  },
-  ctaButton: {
-    marginTop: 20,
-    backgroundColor: "#4E9AF1",
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  ctaButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
   },
   scheduleText: {
     fontSize: 16,

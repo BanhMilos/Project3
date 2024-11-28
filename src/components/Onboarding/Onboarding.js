@@ -1,5 +1,12 @@
-import React, { useRef, useState } from "react";
-import { View, FlatList, StyleSheet, Animated, Dimensions } from "react-native";
+import React, { useRef, useState, useCallback } from "react";
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  Animated,
+  Dimensions,
+  Text,
+} from "react-native";
 import slide from "./slide";
 
 const { width } = Dimensions.get("window");
@@ -8,11 +15,12 @@ const Onboarding = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
 
-  const viewableItemsChanged = useRef(({ viewableItems }) => {
+  // Memoize the callback to optimize performance
+  const viewableItemsChanged = useCallback(({ viewableItems }) => {
     if (viewableItems.length > 0) {
       setCurrentIndex(viewableItems[0].index);
     }
-  }).current;
+  }, []);
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
@@ -40,6 +48,30 @@ const Onboarding = () => {
           )}
         />
       </View>
+
+      {/* Page Indicator */}
+      <View style={styles.indicatorContainer}>
+        {slide.map((_, index) => {
+          const dotWidth = scrollX.interpolate({
+            inputRange: [
+              (index - 1) * width,
+              index * width,
+              (index + 1) * width,
+            ],
+            outputRange: [8, 16, 8],
+            extrapolate: "clamp",
+          });
+          return (
+            <Animated.View
+              key={index}
+              style={[
+                styles.indicator,
+                { width: dotWidth, marginHorizontal: 4 },
+              ]}
+            />
+          );
+        })}
+      </View>
     </View>
   );
 };
@@ -58,6 +90,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     width,
+  },
+  indicatorContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 20,
+  },
+  indicator: {
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#FA7E61",
   },
 });
 

@@ -1,10 +1,22 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import ProgressCircle from "../components/Util/ProgressCircle";
+import { useNavigation } from "@react-navigation/native";
+
 const MainScreen = () => {
+  const navigation = useNavigation();
+
   return (
     <ScrollView style={styles.container}>
-      <View style={{ paddingBottom: 30 }}>
+      <View style={styles.contentWrapper}>
+        {/* Header Section */}
         <View style={styles.header}>
           <View style={styles.profileIcon}>
             <Text>👤</Text>
@@ -14,12 +26,13 @@ const MainScreen = () => {
           </View>
         </View>
 
-        {/* Progress Card */}
+        {/* Progress Section */}
         <View style={styles.progressCard}>
           <View style={styles.progressHeader}>
             <Text style={styles.progressTitle}>Today's Progress</Text>
             <Text style={styles.viewMore}>View more</Text>
           </View>
+
           <View style={styles.macroContainer}>
             <View style={styles.caloriesWrapper}>
               <Text style={styles.caloriesText}>Calories</Text>
@@ -27,37 +40,40 @@ const MainScreen = () => {
             </View>
             <ProgressCircle
               targetPercentage={65}
-              nutrient={"Pro"}
+              nutrient="Pro"
               color1="#A7C7E7"
               color2="#4682B4"
               color3="#1C3D72"
             />
             <ProgressCircle
               targetPercentage={29}
-              nutrient={"Fat"}
+              nutrient="Fat"
               color1="#F1C27D"
               color2="#D4AF37"
               color3="#C68E17"
             />
             <ProgressCircle
               targetPercentage={85}
-              nutrient={"Carb"}
+              nutrient="Carb"
               color1="#D9EAD3"
               color2="#4CAF50"
               color3="#2E7D32"
             />
           </View>
+
           <Text style={styles.motivationText}>
             🎉 Keep the pace! You're doing great.
           </Text>
         </View>
 
-        {/* Food Images */}
+        {/* Food Images Section */}
         <View style={styles.imageContainer}>
-          <Image
-            source={require("../../assets/images/placeholder.png")}
-            style={styles.foodImage}
-          />
+          <TouchableOpacity onPress={() => navigation.navigate("Meal")}>
+            <Image
+              source={require("../../assets/images/placeholder.png")}
+              style={styles.foodImage}
+            />
+          </TouchableOpacity>
           <Image
             source={require("../../assets/images/placeholder.png")}
             style={styles.foodImage}
@@ -80,6 +96,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingTop: 40,
     backgroundColor: "#FAF9F6",
+  },
+  contentWrapper: {
+    paddingBottom: 30,
   },
   header: {
     flexDirection: "row",
@@ -134,17 +153,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     marginVertical: 10,
-  },
-  macroItem: {
-    alignItems: "center",
-  },
-  macroPercentage: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  macroLabel: {
-    fontSize: 14,
-    color: "#888",
   },
   motivationText: {
     marginTop: 10,

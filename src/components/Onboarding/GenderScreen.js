@@ -5,13 +5,39 @@ import CustomButton from "../Util/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 
 const GenderScreen = () => {
-  const [selectedGender, setSelectedGender] = useState(null); // State to track selected gender
+  const [selectedGender, setSelectedGender] = useState(null);
   const navigation = useNavigation();
+
+  const renderGenderOption = (gender, imageSource, label) => (
+    <TouchableOpacity
+      style={[
+        styles.cardGender,
+        selectedGender === gender ? styles.selectedCard : styles.unselectedCard,
+      ]}
+      onPress={() => setSelectedGender(gender)}
+    >
+      <Image source={imageSource} style={styles.image} />
+      <Text
+        style={[
+          styles.gender,
+          { fontSize: scale.textSize + 6 },
+          selectedGender === gender
+            ? styles.selectedText
+            : styles.unselectedText,
+        ]}
+      >
+        {label}
+      </Text>
+    </TouchableOpacity>
+  );
+
   return (
     <View style={styles.container}>
       <Text style={[styles.title, { fontSize: scale.titleSize - 13 }]}>
         What is your gender?
       </Text>
+
+      {/* Card Description */}
       <View style={styles.card}>
         <Image
           style={styles.image}
@@ -22,59 +48,22 @@ const GenderScreen = () => {
           needs
         </Text>
       </View>
-      <View style={styles.cardWrapper}>
-        <TouchableOpacity
-          style={[
-            styles.cardGender,
-            selectedGender === "male"
-              ? styles.selectedCard
-              : styles.unselectedCard,
-          ]}
-          onPress={() => setSelectedGender("male")}
-        >
-          <Image
-            source={require("../../../assets/images/male.png")}
-            style={styles.image}
-          />
-          <Text
-            style={[
-              styles.gender,
-              { fontSize: scale.textSize + 6 },
-              selectedGender === "male"
-                ? styles.selectedText
-                : styles.unselectedText,
-            ]}
-          >
-            Male
-          </Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[
-            styles.cardGender,
-            selectedGender === "female"
-              ? styles.selectedCard
-              : styles.unselectedCard,
-          ]}
-          onPress={() => setSelectedGender("female")}
-        >
-          <Image
-            source={require("../../../assets/images/female.png")}
-            style={styles.image}
-          />
-          <Text
-            style={[
-              styles.gender,
-              { fontSize: scale.textSize + 6 },
-              selectedGender === "female"
-                ? styles.selectedText
-                : styles.unselectedText,
-            ]}
-          >
-            Female
-          </Text>
-        </TouchableOpacity>
+      {/* Gender Options */}
+      <View style={styles.cardWrapper}>
+        {renderGenderOption(
+          "male",
+          require("../../../assets/images/male.png"),
+          "Male"
+        )}
+        {renderGenderOption(
+          "female",
+          require("../../../assets/images/female.png"),
+          "Female"
+        )}
       </View>
+
+      {/* Other Option */}
       <TouchableOpacity
         style={[
           styles.other,
@@ -97,6 +86,7 @@ const GenderScreen = () => {
         </Text>
       </TouchableOpacity>
 
+      {/* Next Button */}
       {selectedGender && (
         <CustomButton
           text={"Next"}

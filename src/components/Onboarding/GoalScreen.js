@@ -7,11 +7,37 @@ import { useNavigation } from "@react-navigation/native";
 const GoalScreen = () => {
   const [selectedGoal, setSelectedGoal] = useState(null);
   const navigation = useNavigation();
+
+  const handleGoalSelect = (goal) => setSelectedGoal(goal);
+
+  const renderGoalCard = (goal, imageSource) => (
+    <TouchableOpacity
+      style={[
+        styles.cardGoal,
+        selectedGoal === goal ? styles.selectedCard : styles.unselectedCard,
+      ]}
+      onPress={() => handleGoalSelect(goal)}
+    >
+      <Text
+        style={[
+          styles.goal,
+          { fontSize: scale.textSize + 6 },
+          selectedGoal === goal ? styles.selectedText : styles.unselectedText,
+        ]}
+      >
+        {goal}
+      </Text>
+      <Image source={imageSource} style={styles.image} />
+    </TouchableOpacity>
+  );
+
   return (
     <View style={styles.container}>
       <Text style={[styles.title, { fontSize: scale.titleSize - 13 }]}>
         What is your main goal?
       </Text>
+
+      {/* Card Description */}
       <View style={styles.card}>
         <Image
           style={styles.image}
@@ -19,88 +45,24 @@ const GoalScreen = () => {
         />
         <Text style={[styles.text, { fontSize: scale.textSize }]}>
           Your goal shapes what you eat. We'll make the best mix of food to help
-          you achieve!
+          you achieve it!
         </Text>
       </View>
-      <View style={styles.cardWrapper}>
-        <TouchableOpacity
-          style={[
-            styles.cardGoal,
-            selectedGoal === "Lose Weight"
-              ? styles.selectedCard
-              : styles.unselectedCard,
-          ]}
-          onPress={() => setSelectedGoal("Lose Weight")}
-        >
-          <Text
-            style={[
-              styles.goal,
-              { fontSize: scale.textSize + 6 },
-              selectedGoal === "Lose Weight"
-                ? styles.selectedText
-                : styles.unselectedText,
-            ]}
-          >
-            Lose Weight
-          </Text>
-          <Image
-            source={require("../../../assets/images/male.png")}
-            style={styles.image}
-          />
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[
-            styles.cardGoal,
-            selectedGoal === "Gain Weight"
-              ? styles.selectedCard
-              : styles.unselectedCard,
-          ]}
-          onPress={() => setSelectedGoal("Gain Weight")}
-        >
-          <Text
-            style={[
-              styles.goal,
-              { fontSize: scale.textSize + 6 },
-              selectedGoal === "Gain Weight"
-                ? styles.selectedText
-                : styles.unselectedText,
-            ]}
-          >
-            Gain Weight
-          </Text>
-          <Image
-            source={require("../../../assets/images/female.png")}
-            style={styles.image}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.cardGoal,
-            selectedGoal === "Keep Fit"
-              ? styles.selectedCard
-              : styles.unselectedCard,
-          ]}
-          onPress={() => setSelectedGoal("Keep Fit")}
-        >
-          <Text
-            style={[
-              styles.goal,
-              { fontSize: scale.textSize + 6 },
-              selectedGoal === "Keep Fit"
-                ? styles.selectedText
-                : styles.unselectedText,
-            ]}
-          >
-            Keep Fit
-          </Text>
-          <Image
-            source={require("../../../assets/images/male.png")}
-            style={styles.image}
-          />
-        </TouchableOpacity>
+      {/* Goal Options */}
+      <View style={styles.cardWrapper}>
+        {renderGoalCard(
+          "Lose Weight",
+          require("../../../assets/images/male.png")
+        )}
+        {renderGoalCard(
+          "Gain Weight",
+          require("../../../assets/images/female.png")
+        )}
+        {renderGoalCard("Keep Fit", require("../../../assets/images/male.png"))}
       </View>
 
+      {/* Next Button */}
       {selectedGoal && (
         <CustomButton
           text={"Next"}

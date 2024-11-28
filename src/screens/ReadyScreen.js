@@ -14,6 +14,7 @@ const ReadyScreen = () => {
           <Image
             source={require("../../assets/images/slide1icon.png")}
             style={styles.image}
+            accessibilityLabel="Meal plan icon"
           />
         </View>
         <View style={styles.textWrapper}>
@@ -21,7 +22,7 @@ const ReadyScreen = () => {
             Relax and let us handle your meals.
           </Text>
           <Text style={[styles.text, styles.subtitleText]}>
-            Here are some questions to create a personalized plans for you.
+            Here are some questions to create a personalized plan for you.
           </Text>
         </View>
       </View>
@@ -35,6 +36,7 @@ const ReadyScreen = () => {
         textSize={scale.buttonTextSize}
         pos={"absolute"}
         onPress={() => navigation.navigate("Allergic")}
+        accessibilityLabel="Start your plan"
       />
     </View>
   );
@@ -59,10 +61,13 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     justifyContent: "space-between",
   },
-  textWrapper: {},
+  textWrapper: {
+    marginTop: 20,
+  },
   text: {
     color: "#333333",
     fontFamily: "Lato-Bold",
+    textAlign: "center",
   },
   titleText: {
     fontSize: scale.titleSize,

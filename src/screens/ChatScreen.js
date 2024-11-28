@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { GiftedChat, Bubble } from "react-native-gifted-chat";
 import { OPENAI_API_KEY } from "@env";
 import axios from "axios";
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setMessages([
@@ -24,12 +25,12 @@ const ChatScreen = () => {
 
   const onSend = useCallback((newMessages = []) => {
     setMessages((prevMessages) => GiftedChat.append(prevMessages, newMessages));
-
     const userMessage = newMessages[0].text;
     getBotResponse(userMessage);
   }, []);
 
   const getBotResponse = async (userMessage) => {
+    setIsLoading(true);
     try {
       const response = await axios.post(
         "https://api.openai.com/v1/chat/completions",
@@ -85,6 +86,8 @@ const ChatScreen = () => {
       setMessages((prevMessages) =>
         GiftedChat.append(prevMessages, [errorMessage])
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -109,6 +112,8 @@ const ChatScreen = () => {
             }}
           />
         )}
+        renderLoading={() => <Text>Bot is typing...</Text>}
+        isTyping={isLoading}
       />
     </View>
   );

@@ -14,7 +14,6 @@ const AnimatedText = Animated.createAnimatedComponent(TextInput);
 
 const radius = 45;
 const circumference = radius * Math.PI * 2;
-const duration = 1500;
 
 const ProgressCircle = ({
   targetPercentage,
@@ -22,6 +21,7 @@ const ProgressCircle = ({
   color1 = "#333333",
   color2 = "#333333",
   color3 = "#333333",
+  duration = 1500, // Allow dynamic duration
 }) => {
   const strokeOffset = useSharedValue(circumference);
   const targetStrokeOffset = (circumference * (100 - targetPercentage)) / 100;
@@ -61,8 +61,8 @@ const ProgressCircle = ({
         alignItems: "center",
       }}
     >
-      {/* Display percentage text */}
-      <View style={{ position: "absolute" }}>
+      {/* Display percentage and nutrient text */}
+      <View style={{ position: "absolute", alignItems: "center" }}>
         <AnimatedText
           style={{
             color: "#37306B",
@@ -71,7 +71,6 @@ const ProgressCircle = ({
           }}
           animatedProps={animatedTextProps}
         />
-        {/* Static text component for nutrient */}
         <Text
           style={{
             color: "#37306B",
@@ -93,7 +92,7 @@ const ProgressCircle = ({
         <Circle
           cx="50"
           cy="50"
-          r="45"
+          r={radius}
           stroke="#E7E7E7"
           strokeWidth="10"
           fill="transparent"
@@ -102,8 +101,8 @@ const ProgressCircle = ({
           animatedProps={animatedCircleProps}
           cx="50"
           cy="50"
-          r="45"
-          strokeDasharray={`${radius * Math.PI * 2}`}
+          r={radius}
+          strokeDasharray={circumference}
           strokeWidth="10"
           fill="transparent"
         />

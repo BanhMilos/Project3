@@ -7,13 +7,16 @@ import {
 } from "react-native";
 import React from "react";
 import CustomButton from "../components/Util/CustomButton";
+import { useNavigation } from "@react-navigation/native";
 import * as scale from "./scale";
 
 const SplashScreen = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require("../../assets/background.png")}
+        source={require("../../assets/images/background.png")}
         style={styles.background}
       >
         {/* Title */}
@@ -32,15 +35,14 @@ const SplashScreen = () => {
         <CustomButton
           text="START"
           bgColor="#FF6F61"
-          Ypos="85%"
-          width={scale.buttonWidth}
-          height={scale.buttonHeight}
-          algs="center"
-          textSize={scale.buttonTextSize}
-          pos="absolute"
+          Ypos={"85%"}
+          onPress={() => navigation.navigate("Ready")}
         />
 
-        <Pressable style={styles.pressableContainer}>
+        <Pressable
+          style={styles.pressableContainer}
+          onPress={() => navigation.navigate("Login")}
+        >
           <Text style={[styles.pressable, { fontSize: scale.textSize - 1 }]}>
             Already have an account? Log in
           </Text>

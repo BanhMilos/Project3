@@ -17,13 +17,14 @@ const SignUpScreen = () => {
   const subtitleSizeScale = titleSizeScale - 0.06;
   const subtitleYScale = titleYScale + 0.01;
   const buttonTextScale = subtitleSizeScale - 0.015;
+
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require("../../assets/background.png")} // URL to your image
+        source={require("../../assets/background.png")}
         style={styles.background}
       >
-        <View style={([styles.wrapper], { top: screenHeight * 0.5 })}>
+        <View style={styles.wrapper}>
           <CustomButton
             text={"Sign up with email"}
             bgColor={"#FF6F61"}
@@ -32,11 +33,13 @@ const SignUpScreen = () => {
             algs={"center"}
             textSize={screenWidth * buttonTextScale}
           />
+
           <View style={styles.divider}>
             <View style={styles.line} />
             <Text>or use social sign up</Text>
             <View style={styles.line} />
           </View>
+
           <CustomButton
             text={"Continue with Google"}
             bgColor={"#FFFFFF"}
@@ -46,6 +49,7 @@ const SignUpScreen = () => {
             algs={"center"}
             textSize={screenWidth * buttonTextScale}
           />
+
           <CustomButton
             text={"Continue with Facebook"}
             bgColor={"#FFFFFF"}
@@ -56,22 +60,20 @@ const SignUpScreen = () => {
             textSize={screenWidth * buttonTextScale}
           />
         </View>
+
         <Pressable
-          style={{
-            position: "absolute",
-            alignSelf: "center",
-          }}
+          style={styles.pressableContainer}
+          onPress={() => console.log("Navigate to login screen")} // Add navigation logic here
         >
           <Text
             style={[
               styles.pressable,
               {
-                top: screenHeight * 0.95,
                 fontSize: screenWidth * (buttonTextScale - 0.005),
               },
             ]}
           >
-            Already have account? Log in
+            Already have an account? Log in
           </Text>
         </Pressable>
       </ImageBackground>
@@ -85,27 +87,29 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   container: {
-    //backgroundColor: "green",
     flex: 1,
   },
   wrapper: {
     flex: 1,
-    backgroundColor: "blue",
-    alignContent: "center",
+    justifyContent: "center", // This ensures that the buttons are vertically centered
     alignItems: "center",
+    paddingHorizontal: 20, // Ensure there is some padding from the sides
   },
   divider: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    //backgroundColor: "red",
-    width: "100%",
+    justifyContent: "center",
     alignItems: "center",
-    marginVertical: 10,
+    marginVertical: 15,
   },
   line: {
     backgroundColor: "#333333",
     width: "20%",
     height: 1,
+  },
+  pressableContainer: {
+    position: "absolute",
+    alignSelf: "center",
+    bottom: 20, // Position it at the bottom of the screen
   },
   pressable: {
     fontWeight: "semibold",

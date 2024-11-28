@@ -12,21 +12,22 @@ const subtitleScale = 0.05;
 const subtitleSize = screenWidth * subtitleScale;
 
 // Button styles
-const buttonTextScale = 0.05;
-const buttonTextSize = screenWidth * buttonTextScale;
 const buttonHeight = screenHeight * 0.07;
 const buttonWidth = screenWidth * 0.7;
 const buttonYPos = screenHeight * 0.875;
+const buttonTextSize = screenWidth * 0.05;
 
 // Text styles
-const textScale = 0.04;
-const textSize = screenWidth * textScale;
+const textSize = screenWidth * 0.04;
 
-// Back button
-const backbuttonY = 0.04 * screenHeight;
-const backButtonX = 0.05 * screenWidth;
-const headerTitleY = 0.045 * screenHeight;
-const headerTitleX = 0.5 * screenWidth;
+// Header styles
+const headerHeight = screenHeight * 0.1;
+const backButtonX = screenWidth * 0.05;
+const backButtonY = screenHeight * 0.055;
+const headerTitleX = screenWidth * 0.5;
+const headerTitleY = screenHeight * 0.065;
+
+// Export all constants
 export {
   titleSize,
   subtitleSize,
@@ -36,7 +37,8 @@ export {
   buttonWidth,
   buttonYPos,
   backButtonX,
-  backbuttonY,
+  backButtonY,
   headerTitleX,
   headerTitleY,
+  headerHeight,
 };

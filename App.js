@@ -12,6 +12,8 @@ import GenderScreen from "./src/components/Onboarding/GenderScreen";
 import AlergicScreen from "./src/components/Onboarding/AllergicScreen";
 import GoalScreen from "./src/components/Onboarding/GoalScreen";
 import ReadyScreen from "./src/screens/ReadyScreen";
+import MealDetailsScreen from "./src/screens/MealDetailsScreen";
+import SplashScreen from "./src/screens/SplashScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -32,12 +34,14 @@ const BottomTabs = () => {
 const AppStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Splash" component={SplashScreen} />
       <Stack.Screen name="Ready" component={ReadyScreen} />
       <Stack.Screen name="Onboarding" component={Onboarding} />
       <Stack.Screen name="Allergic" component={AlergicScreen} />
       <Stack.Screen name="Gender" component={GenderScreen} />
       <Stack.Screen name="Goal" component={GoalScreen} />
       <Stack.Screen name="Home" component={BottomTabs} />
+      <Stack.Screen name="Meal" component={MealDetailsScreen} />
       <Stack.Screen
         name="PlanDetails"
         component={PlanDetailsScreen}

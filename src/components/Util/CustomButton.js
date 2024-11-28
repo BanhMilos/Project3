@@ -1,18 +1,20 @@
-import { Text, StyleSheet, Pressable } from "react-native";
 import React from "react";
+import { Text, StyleSheet, Pressable } from "react-native";
+import * as scale from "../../screens/scale";
 
 const CustomButton = ({
-  onPress,
-  text,
-  textSize,
+  onPress = () => console.log(`${text || "Button"} pressed`),
+  text = "Button",
+  textSize = scale.subtitleSize,
   bgColor = "dodgerblue",
   fgColor = "#FFFFFF",
-  isDisabled,
-  height = 50,
-  width,
-  Ypos,
-  algs,
-  pos = "relative",
+  isDisabled = false,
+  height = scale.buttonHeight,
+  width = scale.buttonWidth,
+  Ypos = scale.buttonYPos,
+  algs = "center",
+  pos = "absolute",
+  borderRadius = 0,
 }) => {
   return (
     <Pressable
@@ -27,6 +29,7 @@ const CustomButton = ({
           top: Ypos,
           alignSelf: algs,
           position: pos,
+          borderRadius,
         },
       ]}
     >
@@ -40,8 +43,8 @@ const CustomButton = ({
 const styles = StyleSheet.create({
   button: {
     alignItems: "center",
-    borderRadius: 50,
     justifyContent: "center",
+    borderRadius: 50,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 4,

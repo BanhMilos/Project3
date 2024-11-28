@@ -10,11 +10,12 @@ import allergenData from "./allergenData"; // Your allergen data
 import * as scale from "../../screens/scale";
 import CustomButton from "../Util/CustomButton";
 import { useNavigation } from "@react-navigation/native";
-import GenderScreen from "./GenderScreen";
 
 const AlergicScreen = () => {
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState([]); // Track selected allergens
   const navigation = useNavigation();
+
+  // Handle allergen selection
   const handlePress = (item) => {
     setSelected((prevSelected) =>
       prevSelected.includes(item.text)
@@ -23,6 +24,7 @@ const AlergicScreen = () => {
     );
   };
 
+  // Render individual allergen button
   const renderButton = (item) => {
     const isSelected = selected.includes(item.text);
     return (
@@ -54,6 +56,8 @@ const AlergicScreen = () => {
       <Text style={[styles.title, { fontSize: scale.titleSize - 13 }]}>
         What are you allergic to?
       </Text>
+
+      {/* ScrollView for allergen categories */}
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}
@@ -71,6 +75,8 @@ const AlergicScreen = () => {
           </View>
         ))}
       </ScrollView>
+
+      {/* Next Button */}
       <CustomButton
         text={"Next"}
         bgColor={"#333333"}
