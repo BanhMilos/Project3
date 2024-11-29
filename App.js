@@ -14,6 +14,7 @@ import GoalScreen from "./src/components/Onboarding/GoalScreen";
 import ReadyScreen from "./src/screens/ReadyScreen";
 import MealDetailsScreen from "./src/screens/MealDetailsScreen";
 import SplashScreen from "./src/screens/SplashScreen";
+import SignUpScreen from "./src/screens/SignUpScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -35,6 +36,7 @@ const AppStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Splash" component={SplashScreen} />
+      <Stack.Screen name="Sign up" component={SignUpScreen} />
       <Stack.Screen name="Ready" component={ReadyScreen} />
       <Stack.Screen name="Onboarding" component={Onboarding} />
       <Stack.Screen name="Allergic" component={AlergicScreen} />
