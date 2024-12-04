@@ -14,7 +14,7 @@ const CustomButton = ({
   Ypos = scale.buttonYPos,
   algs = "center",
   pos = "absolute",
-  borderRadius = 0,
+  borderRadius = 5,
 }) => {
   return (
     <Pressable

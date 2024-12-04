@@ -10,14 +10,15 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import CustomButton from "../components/Util/CustomButton";
 import * as scale from "./scale";
+import DognutChart from "../components/Util/DognutChart";
 
 const MealDetailsScreen = () => {
   const navigation = useNavigation();
-  const [opacity, setOpacity] = useState(0); // Initial opacity (transparent)
+  const [opacity, setOpacity] = useState(0);
 
   const handleScroll = (e) => {
     const offsetY = e.nativeEvent.contentOffset.y;
-    const newOpacity = Math.min(offsetY / 225, 1); // Gradually increase opacity up to 1
+    const newOpacity = Math.min(offsetY / 225, 1);
     setOpacity(newOpacity);
   };
 
@@ -32,6 +33,7 @@ const MealDetailsScreen = () => {
           source={require("../../assets/images/placeholder.png")}
           style={styles.recipeImage}
         />
+
         <Text style={styles.title}>
           No-Cook Tomato Sauce With Zucchini Ribbons and Pasta
         </Text>
@@ -47,16 +49,31 @@ const MealDetailsScreen = () => {
         </View>
 
         <View style={styles.nutritionContainer}>
-          {[
-            "Calories: 346 cal",
-            "Carbs: 46.5 g",
-            "Fat: 15.6 g",
-            "Protein: 9.4 g",
-          ].map((item, index) => (
-            <Text key={index} style={styles.nutritionText}>
-              {item}
-            </Text>
-          ))}
+          <DognutChart
+            calories={346}
+            unit={"cal"}
+            series={[51, 39, 9.4]}
+            sliceColor={["#55bfb5", "#b878e2", "#fdb853"]}
+            widthAndHeight={75}
+            fontCaloriesSize={17}
+            fontUnitSize={12}
+            coverRadius={0.8}
+          />
+          <View style={styles.nutritionInfo}>
+            {[
+              ["51%", "39%", "10%"],
+              ["46.5 g", "15.6 g", "9.4 g"],
+              ["Carbs", "Fat", "Protein"],
+            ].map((item, rowIndex) => (
+              <View key={rowIndex} style={styles.row}>
+                {item.map((value, colIndex) => (
+                  <Text key={colIndex} style={styles.nutritionText}>
+                    {value}
+                  </Text>
+                ))}
+              </View>
+            ))}
+          </View>
         </View>
 
         <Text style={styles.subTitle}>Ingredients</Text>
@@ -69,7 +86,9 @@ const MealDetailsScreen = () => {
           "- 8 ounces long whole-wheat pasta",
           "- 2 small zucchinis",
         ].map((ingredient, index) => (
-          <Text key={index}>{ingredient}</Text>
+          <Text key={index} style={styles.ingredientText}>
+            {ingredient}
+          </Text>
         ))}
 
         <Text style={styles.subTitle}>Directions</Text>
@@ -79,7 +98,9 @@ const MealDetailsScreen = () => {
           "3. Boil pasta until al dente and mix with other ingredients...",
           "4. Garnish with basil, Parmesan, and sea salt. Serve warm.",
         ].map((step, index) => (
-          <Text key={index}>{step}</Text>
+          <Text key={index} style={styles.directionText}>
+            {step}
+          </Text>
         ))}
       </ScrollView>
 
@@ -88,6 +109,7 @@ const MealDetailsScreen = () => {
         <Text style={styles.backButtonText}>←</Text>
       </TouchableOpacity>
       <Text style={styles.headerTitle}>Meal Details</Text>
+
       <CustomButton text={"Let's start"} bgColor={"#333333"} />
     </View>
   );
@@ -151,15 +173,34 @@ const styles = StyleSheet.create({
   },
   nutritionContainer: {
     marginTop: 16,
+    flexDirection: "row",
+  },
+  nutritionInfo: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 5,
+    paddingHorizontal: 20,
   },
   nutritionText: {
-    fontSize: 14,
-    color: "#555",
+    fontSize: 16,
+    fontWeight: "600",
   },
   subTitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginTop: 16,
+  },
+  ingredientText: {
+    fontSize: 16,
+    marginVertical: 4,
+  },
+  directionText: {
+    fontSize: 16,
+    marginVertical: 4,
   },
 });
 

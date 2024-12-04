@@ -36,12 +36,12 @@ const SplashScreen = () => {
           text="START"
           bgColor="#FF6F61"
           Ypos={"85%"}
-          onPress={() => navigation.navigate("Ready")}
+          onPress={() => navigation.navigate("Sign up")}
         />
 
         <Pressable
           style={styles.pressableContainer}
-          onPress={() => navigation.navigate("Login")}
+          onPress={() => console.log("pressing")}
         >
           <Text style={[styles.pressable, { fontSize: scale.textSize - 1 }]}>
             Already have an account? Log in

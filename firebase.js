@@ -2,19 +2,20 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
+import { FIREBASE_API_KEY } from "@env";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBUCWfuQi60XdAgYOKikOTtI57jyE_yPk0",
+  apiKey: FIREBASE_API_KEY,
   authDomain: "project3-d8e4f.firebaseapp.com",
   projectId: "project3-d8e4f",
   storageBucket: "project3-d8e4f.firebasestorage.app",
   messagingSenderId: "932329773133",
-  appId: "1:932329773133:web:12b9699d764d0061e7e404",
-  measurementId: "G-GW4BBD9YK2",
+  appId: "1:932329773133:web:1159c6ae63ef7c96e7e404",
+  measurementId: "G-22S1L0EB17",
 };
 
 // Initialize Firebase
