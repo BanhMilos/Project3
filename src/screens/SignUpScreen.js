@@ -7,40 +7,76 @@ import {
   StyleSheet,
   Dimensions,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 import CustomButton from "../components/Util/CustomButton";
 import { Ionicons } from "react-native-vector-icons";
 import * as scale from "./scale";
+import { collection } from "firebase/firestore";
 
 const SignUpScreen = () => {
   const screenHeight = Dimensions.get("window").height;
   const screenWidth = Dimensions.get("window").width;
   const buttonTextScale = 0.045;
   const navigation = useNavigation();
-
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isSignUpFormVisible, setIsSignUpFormVisible] = useState(false);
   const [isLoginFormVisible, setIsLoginFormVisible] = useState(false);
-
-  const handleSignUp = () => {
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.navigate("Onboarding");
+      }
+    });
+    return unsubscribe;
+  });
+  const handleSignUp = async () => {
+    setLoading(true);
     if (password !== confirmPassword) {
       alert("Passwords do not match.");
       return;
     }
+    try {
+      const userCredentials = await auth.createUserWithEmailAndPassword(
+        email,
+        password
+      );
+      const user = userCredentials.user;
+      console.log("User created: ", user.email);
 
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log("User created: ", user.email);
-        alert("Account created successfully!");
-        navigation.navigate("Onboarding");
-      })
-      .catch((error) => alert(error.message));
+      await db.collection("User").doc(user.uid).set({
+        allergic: [],
+        currentPlan: "",
+        gender: 0, //Default value ~ 0 - Male, 1 - Female, -1 - others
+        goal: 0, // Default value ~ 0 - Keep fit, 1 - Gain weight, -1 - Lose weight
+      });
+
+      await db
+        .collection("User")
+        .doc(user.uid)
+        .collection("Meals")
+        .doc("init")
+        .set({ initialized: true });
+
+      console.log("Meals subcollection initialized");
+
+      await db
+        .collection("User")
+        .doc(user.uid)
+        .collection("WeeklyProgress")
+        .doc("init")
+        .set({ initialized: true });
+
+      console.log("WeeklyProgress subcollection initialized");
+    } catch (error) {
+      alert(error.message);
+    }
+    setLoading(false);
   };
 
   const handleLogin = () => {
@@ -70,6 +106,17 @@ const SignUpScreen = () => {
         source={require("../../assets/images/background.png")}
         style={styles.background}
       >
+        {loading && (
+          <ActivityIndicator
+            style={{
+              top: Dimensions.get("screen").height / 2.5,
+              alignSelf: "center",
+              position: "absolute",
+              zIndex: 2,
+            }}
+            size={"large"}
+          />
+        )}
         <View style={styles.wrapper}>
           {isSignUpFormVisible ? (
             <View style={styles.formContainer}>
