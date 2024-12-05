@@ -44,13 +44,7 @@ const AppStack = () => {
       <Stack.Screen name="Goal" component={GoalScreen} />
       <Stack.Screen name="Home" component={BottomTabs} />
       <Stack.Screen name="Meal" component={MealDetailsScreen} />
-      <Stack.Screen
-        name="PlanDetails"
-        component={PlanDetailsScreen}
-        options={{
-          tabBarStyle: { display: "none" },
-        }}
-      />
+      <Stack.Screen name="PlanDetails" component={PlanDetailsScreen} />
     </Stack.Navigator>
   );
 };
