@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground,
+  Pressable,
+} from "react-native";
 import SignUpForm from "../components/AuthenticationForm/SignUpForm";
 import SignInForm from "../components/AuthenticationForm/SignInForm";
 

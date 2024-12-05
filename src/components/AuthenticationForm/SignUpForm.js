@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "react-native-vector-icons";
-import { auth, db } from "../../firebase";
+import { auth, db } from "../../../firebase";
 
 const SignUpForm = ({ onBack }) => {
   const [email, setEmail] = useState("");

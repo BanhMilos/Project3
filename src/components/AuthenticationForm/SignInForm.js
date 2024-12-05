@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "react-native-vector-icons";
-import { auth } from "../../firebase";
+import { auth } from "../../../firebase";
 
 const SignInForm = ({ onBack }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const handleLogin = async () => {
     try {
       const userCredentials = await auth.signInWithEmailAndPassword(
