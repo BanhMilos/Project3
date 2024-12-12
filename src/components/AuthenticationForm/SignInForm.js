@@ -1,68 +1,139 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import { Ionicons } from "react-native-vector-icons";
 import { auth } from "../../../firebase";
+import { useNavigation } from "@react-navigation/native";
 
 const SignInForm = ({ onBack }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
   const handleLogin = async () => {
+    setLoading(true);
     try {
       const userCredentials = await auth.signInWithEmailAndPassword(
         email,
         password
       );
       console.log("User logged in: ", userCredentials.user.email);
-      alert("Logged in successfully!");
     } catch (error) {
       alert(error.message);
     }
+    setLoading(false);
+    navigation.navigate("Home");
   };
 
   return (
     <View style={styles.formContainer}>
-      <Pressable style={styles.backButton} onPress={onBack}>
+      {loading && (
+        <ActivityIndicator
+          style={{
+            top: "50%",
+            alignSelf: "center",
+            position: "absolute",
+            zIndex: 2,
+          }}
+          size={"large"}
+        />
+      )}
+      <Pressable style={styles.backButton} onPress={() => onBack()}>
         <Ionicons name="arrow-back" size={25} color="#333333" />
       </Pressable>
-      <Text style={styles.header}>Sign In</Text>
+
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Welcome Back</Text>
+        <Text style={styles.headerSubtitle}>Please log in to continue</Text>
+      </View>
+
+      <Text style={styles.inputLabel}>Your email address</Text>
       <TextInput
-        placeholder="Email"
+        placeholder="abcxyz@gmail.com"
+        style={styles.input}
         value={email}
         onChangeText={setEmail}
-        style={styles.input}
       />
+
+      <Text style={styles.inputLabel}>Your password</Text>
       <TextInput
-        placeholder="Password"
+        placeholder="min 8 characters"
+        style={styles.input}
         secureTextEntry
         value={password}
         onChangeText={setPassword}
-        style={styles.input}
       />
+
       <Pressable style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Sign In</Text>
+        <Text style={styles.buttonText}>Log in</Text>
       </Pressable>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  formContainer: { padding: 20 },
-  backButton: { marginBottom: 10 },
-  header: { fontSize: 20, marginBottom: 10 },
+  formContainer: {
+    width: "85%",
+    backgroundColor: "#FAF9F6",
+    paddingHorizontal: 25,
+    paddingTop: 40,
+    paddingBottom: 30,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  backButton: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    zIndex: 1,
+  },
+  header: {
+    marginBottom: 30,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "500",
+  },
+  headerSubtitle: {
+    fontSize: 13,
+    color: "#B5B5B5",
+  },
+  inputLabel: {
+    fontSize: 13,
+    marginTop: 5,
+  },
   input: {
-    borderColor: "#ccc",
+    width: "100%",
+    height: 50,
+    borderColor: "#CCC",
     borderWidth: 1,
     borderRadius: 5,
-    padding: 10,
+    paddingHorizontal: 10,
+    marginTop: 5,
     marginBottom: 10,
+    backgroundColor: "#FFF",
   },
   button: {
-    backgroundColor: "#333",
-    padding: 15,
-    borderRadius: 5,
     alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#333333",
+    borderRadius: 10,
+    alignSelf: "center",
+    width: "100%",
+    height: 50,
+    marginTop: 20,
   },
-  buttonText: { color: "#fff" },
+  buttonText: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "#ffffff",
+  },
 });
 
 export default SignInForm;

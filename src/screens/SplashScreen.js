@@ -5,58 +5,32 @@ import {
   ImageBackground,
   Pressable,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import CustomButton from "../components/Util/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import * as scale from "./scale";
+import SignInForm from "../components/AuthenticationForm/SignInForm";
+import SignUpForm from "../components/AuthenticationForm/SignUpForm";
 
 const SplashScreen = () => {
   const navigation = useNavigation();
   const [isLoginFormVisible, setIsLoginFormVisible] = useState(false);
+  const [currentForm, setCurrentForm] = useState("default"); // 'default', 'signUp', 'signIn'
+
+  const renderForm = () => {
+    if (currentForm === "signIn") {
+      return <SignInForm onBack={() => setCurrentForm("default")} />;
+    }
+    return null;
+  };
   return (
     <View style={styles.container}>
       <ImageBackground
         source={require("../../assets/images/background.png")}
         style={styles.background}
       >
-        {isLoginFormVisible ? (
-          <View style={styles.formContainer}>
-            <Pressable
-              style={styles.backButton}
-              onPress={() => setIsLoginFormVisible(false)}
-            >
-              <Ionicons name="arrow-back" size={25} color="#333333" />
-            </Pressable>
-
-            <View style={styles.header}>
-              <Text style={styles.headerTitle}>Welcome Back</Text>
-              <Text style={styles.headerSubtitle}>
-                Please log in to continue
-              </Text>
-            </View>
-
-            <Text style={styles.inputLabel}>Your email address</Text>
-            <TextInput
-              placeholder="abcxyz@gmail.com"
-              style={styles.input}
-              value={email}
-              onChangeText={setEmail}
-            />
-
-            <Text style={styles.inputLabel}>Your password</Text>
-            <TextInput
-              placeholder="min 8 characters"
-              style={styles.input}
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-            />
-
-            <Pressable style={styles.signUpButton} onPress={handleLogin}>
-              <Text style={styles.signUpButtonText}>Log in</Text>
-            </Pressable>
-          </View>
-        ) : (
+        {renderForm()}
+        {currentForm === "default" && (
           <>
             {/* Title */}
             <View style={styles.titleContainer}>
@@ -82,7 +56,7 @@ const SplashScreen = () => {
 
         <Pressable
           style={styles.pressableContainer}
-          onPress={() => console.log("pressing")}
+          onPress={() => setCurrentForm("signIn")}
         >
           <Text style={[styles.pressable, { fontSize: scale.textSize - 1 }]}>
             Already have an account? Log in
@@ -102,16 +76,18 @@ const styles = StyleSheet.create({
   background: {
     width: "100%",
     height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     color: "#2C3E50",
     fontFamily: "Lato-Bold",
-    marginLeft: 30,
     fontWeight: "bold",
     top: "44%",
   },
   titleContainer: {
     flex: 1,
+    marginRight: 30,
   },
   pressableContainer: {
     position: "absolute",

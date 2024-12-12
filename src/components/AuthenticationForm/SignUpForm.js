@@ -62,56 +62,105 @@ const SignUpForm = ({ onBack }) => {
       {loading && (
         <ActivityIndicator size="large" style={styles.loadingIndicator} />
       )}
-      <Pressable style={styles.backButton} onPress={onBack}>
+      <Pressable style={styles.backButton} onPress={() => onBack()}>
         <Ionicons name="arrow-back" size={25} color="#333333" />
       </Pressable>
-      <Text style={styles.header}>Sign Up</Text>
+
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Let's get started</Text>
+        <Text style={styles.headerSubtitle}>Fill the form to continue</Text>
+      </View>
+
+      <Text style={styles.inputLabel}>Your email address</Text>
       <TextInput
-        placeholder="Email"
+        placeholder="abcxyz@gmail.com"
+        style={styles.input}
         value={email}
         onChangeText={setEmail}
-        style={styles.input}
       />
+
+      <Text style={styles.inputLabel}>Your password</Text>
       <TextInput
-        placeholder="Password"
+        placeholder="min 8 characters"
+        style={styles.input}
         secureTextEntry
         value={password}
         onChangeText={setPassword}
-        style={styles.input}
       />
+
+      <Text style={styles.inputLabel}>Confirm your password</Text>
       <TextInput
-        placeholder="Confirm Password"
+        placeholder="confirm password"
+        style={styles.input}
         secureTextEntry
         value={confirmPassword}
         onChangeText={setConfirmPassword}
-        style={styles.input}
       />
+
       <Pressable style={styles.button} onPress={handleSignUp}>
-        <Text style={styles.buttonText}>Sign Up</Text>
+        <Text style={styles.buttonText}>Sign up</Text>
       </Pressable>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  formContainer: { padding: 20 },
-  backButton: { marginBottom: 10 },
-  header: { fontSize: 20, marginBottom: 10 },
+  formContainer: {
+    width: "85%",
+    backgroundColor: "#FAF9F6",
+    paddingHorizontal: 25,
+    paddingTop: 40,
+    paddingBottom: 30,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  backButton: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    zIndex: 1,
+  },
+  header: {
+    marginBottom: 30,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "500",
+  },
+  headerSubtitle: {
+    fontSize: 13,
+    color: "#B5B5B5",
+  },
+  inputLabel: {
+    fontSize: 13,
+    marginTop: 5,
+  },
   input: {
-    borderColor: "#ccc",
+    width: "100%",
+    height: 50,
+    borderColor: "#CCC",
     borderWidth: 1,
     borderRadius: 5,
-    padding: 10,
+    paddingHorizontal: 10,
+    marginTop: 5,
     marginBottom: 10,
+    backgroundColor: "#FFF",
   },
   button: {
-    backgroundColor: "#333",
-    padding: 15,
-    borderRadius: 5,
     alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#333333",
+    borderRadius: 10,
+    alignSelf: "center",
+    width: "100%",
+    height: 50,
+    marginTop: 20,
   },
-  buttonText: { color: "#fff" },
-  loadingIndicator: { marginVertical: 20 },
+  buttonText: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "#ffffff",
+  },
 });
 
 export default SignUpForm;
