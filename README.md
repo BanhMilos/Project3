@@ -1,4 +1,4 @@
-roject 3
+Project 3
 
 ### Existing Features:
 - Tracking user nutrition per week with an animated donut chart.  
