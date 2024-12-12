@@ -16,24 +16,24 @@ $ cd react-native-iShiWuPai
 $ npm install  
 $ react-native run-ios / run-android
 ```
-###Related Third-Party Libraries:
-@react-native-community/masked-view
-@react-native-community/netinfo
-@react-navigation/bottom-tabs
-@react-navigation/native
-@react-navigation/stack
-axios
-expo
-expo-status-bar
-firebase
-react
-react-native
-react-native-dotenv
-react-native-gesture-handler
-react-native-gifted-chat
-react-native-pie-chart
-react-native-reanimated
-react-native-safe-area-context
-react-native-screens
-react-native-svg
-react-native-vector-icons
+### Related Third-Party Libraries:
+- @react-native-community/masked-view
+- @react-native-community/netinfo
+- @react-navigation/bottom-tabs
+- @react-navigation/native
+- @react-navigation/stack
+- axios
+- expo
+- expo-status-bar
+- firebase
+- react
+- react-native
+- react-native-dotenv
+- react-native-gesture-handler
+- react-native-gifted-chat
+- react-native-pie-chart
+- react-native-reanimated
+- react-native-safe-area-context
+- react-native-screens
+- react-native-svg
+- react-native-vector-icons
