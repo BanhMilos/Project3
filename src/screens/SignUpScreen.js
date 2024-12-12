@@ -1,104 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
-  View,
-  Text,
-  TextInput,
-  ImageBackground,
   StyleSheet,
-  Dimensions,
+  Text,
+  View,
+  ImageBackground,
   Pressable,
-  ActivityIndicator,
+  Dimensions,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { auth, db } from "../../firebase";
+import SignUpForm from "../components/AuthenticationForm/SignUpForm";
+import SignInForm from "../components/AuthenticationForm/SignInForm";
 import CustomButton from "../components/Util/CustomButton";
-import { Ionicons } from "react-native-vector-icons";
 import * as scale from "./scale";
-import { collection } from "firebase/firestore";
 
 const SignUpScreen = () => {
   const screenHeight = Dimensions.get("window").height;
   const screenWidth = Dimensions.get("window").width;
   const buttonTextScale = 0.045;
-  const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [isSignUpFormVisible, setIsSignUpFormVisible] = useState(false);
-  const [isLoginFormVisible, setIsLoginFormVisible] = useState(false);
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        navigation.navigate("Onboarding");
-      }
-    });
-    return unsubscribe;
-  });
-  const handleSignUp = async () => {
-    setLoading(true);
-    if (password !== confirmPassword) {
-      alert("Passwords do not match.");
-      return;
+  const [currentForm, setCurrentForm] = useState("default"); // 'default', 'signUp', 'signIn'
+
+  const renderForm = () => {
+    if (currentForm === "signUp") {
+      return <SignUpForm onBack={() => setCurrentForm("default")} />;
     }
-    try {
-      const userCredentials = await auth.createUserWithEmailAndPassword(
-        email,
-        password
-      );
-      const user = userCredentials.user;
-      console.log("User created: ", user.email);
-
-      await db.collection("User").doc(user.uid).set({
-        allergic: [],
-        currentPlan: "",
-        gender: 0, //Default value ~ 0 - Male, 1 - Female, -1 - others
-        goal: 0, // Default value ~ 0 - Keep fit, 1 - Gain weight, -1 - Lose weight
-      });
-
-      await db
-        .collection("User")
-        .doc(user.uid)
-        .collection("Meals")
-        .doc("init")
-        .set({ initialized: true });
-
-      console.log("Meals subcollection initialized");
-
-      await db
-        .collection("User")
-        .doc(user.uid)
-        .collection("WeeklyProgress")
-        .doc("init")
-        .set({ initialized: true });
-
-      console.log("WeeklyProgress subcollection initialized");
-    } catch (error) {
-      alert(error.message);
+    if (currentForm === "signIn") {
+      return <SignInForm onBack={() => setCurrentForm("default")} />;
     }
-    setLoading(false);
+    return null;
   };
-
-  const handleLogin = () => {
-    auth
-      .signInWithEmailAndPassword(email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log("User logged in: ", user.email);
-        alert("Logged in successfully!");
-        navigation.navigate("Onboarding");
-      })
-      .catch((error) => alert(error.message));
-  };
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        navigation.navigate("Onboarding");
-      }
-    });
-    return unsubscribe;
-  }, [navigation]);
 
   return (
     <View style={styles.container}>
@@ -106,109 +34,17 @@ const SignUpScreen = () => {
         source={require("../../assets/images/background.png")}
         style={styles.background}
       >
-        {loading && (
-          <ActivityIndicator
-            style={{
-              top: Dimensions.get("screen").height / 2.5,
-              alignSelf: "center",
-              position: "absolute",
-              zIndex: 2,
-            }}
-            size={"large"}
-          />
-        )}
         <View style={styles.wrapper}>
-          {isSignUpFormVisible ? (
-            <View style={styles.formContainer}>
-              <Pressable
-                style={styles.backButton}
-                onPress={() => setIsSignUpFormVisible(false)}
-              >
-                <Ionicons name="arrow-back" size={25} color="#333333" />
-              </Pressable>
+          {renderForm()}
 
-              <View style={styles.header}>
-                <Text style={styles.headerTitle}>Let's get started</Text>
-                <Text style={styles.headerSubtitle}>
-                  Fill the form to continue
-                </Text>
-              </View>
-
-              <Text style={styles.inputLabel}>Your email address</Text>
-              <TextInput
-                placeholder="abcxyz@gmail.com"
-                style={styles.input}
-                value={email}
-                onChangeText={setEmail}
-              />
-
-              <Text style={styles.inputLabel}>Your password</Text>
-              <TextInput
-                placeholder="min 8 characters"
-                style={styles.input}
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-              />
-
-              <Text style={styles.inputLabel}>Confirm your password</Text>
-              <TextInput
-                placeholder="confirm password"
-                style={styles.input}
-                secureTextEntry
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-              />
-
-              <Pressable style={styles.signUpButton} onPress={handleSignUp}>
-                <Text style={styles.signUpButtonText}>Sign up</Text>
-              </Pressable>
-            </View>
-          ) : isLoginFormVisible ? (
-            <View style={styles.formContainer}>
-              <Pressable
-                style={styles.backButton}
-                onPress={() => setIsLoginFormVisible(false)}
-              >
-                <Ionicons name="arrow-back" size={25} color="#333333" />
-              </Pressable>
-
-              <View style={styles.header}>
-                <Text style={styles.headerTitle}>Welcome Back</Text>
-                <Text style={styles.headerSubtitle}>
-                  Please log in to continue
-                </Text>
-              </View>
-
-              <Text style={styles.inputLabel}>Your email address</Text>
-              <TextInput
-                placeholder="abcxyz@gmail.com"
-                style={styles.input}
-                value={email}
-                onChangeText={setEmail}
-              />
-
-              <Text style={styles.inputLabel}>Your password</Text>
-              <TextInput
-                placeholder="min 8 characters"
-                style={styles.input}
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-              />
-
-              <Pressable style={styles.signUpButton} onPress={handleLogin}>
-                <Text style={styles.signUpButtonText}>Log in</Text>
-              </Pressable>
-            </View>
-          ) : (
+          {currentForm === "default" && (
             <>
               <CustomButton
                 text="Sign up with email"
                 bgColor="#FF6F61"
                 textSize={screenWidth * buttonTextScale}
                 Ypos={screenHeight * 0.395}
-                onPress={() => setIsSignUpFormVisible(true)}
+                onPress={() => setCurrentForm("signUp")}
               />
 
               <View style={styles.divider}>
@@ -238,7 +74,7 @@ const SignUpScreen = () => {
 
         <Pressable
           style={styles.pressableContainer}
-          onPress={() => setIsLoginFormVisible(true)}
+          onPress={() => setCurrentForm("signIn")}
         >
           <Text style={[styles.pressable, { fontSize: scale.textSize - 1 }]}>
             Already have an account? Log in
@@ -277,67 +113,11 @@ const styles = StyleSheet.create({
   pressableContainer: {
     position: "absolute",
     alignSelf: "center",
-    top: "95%",
+    bottom: 20,
   },
   pressable: {
-    fontWeight: "semibold",
+    fontWeight: "600",
     color: "#333333",
-  },
-  formContainer: {
-    width: "85%",
-    backgroundColor: "#FAF9F6",
-    paddingHorizontal: 25,
-    paddingTop: 40,
-    paddingBottom: 30,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  backButton: {
-    position: "absolute",
-    top: 10,
-    left: 10,
-    zIndex: 1,
-  },
-  header: {
-    marginBottom: 30,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "500",
-  },
-  headerSubtitle: {
-    fontSize: 13,
-    color: "#B5B5B5",
-  },
-  inputLabel: {
-    fontSize: 13,
-    marginTop: 5,
-  },
-  input: {
-    width: "100%",
-    height: 50,
-    borderColor: "#CCC",
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginTop: 5,
-    marginBottom: 10,
-    backgroundColor: "#FFF",
-  },
-  signUpButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#333333",
-    borderRadius: 10,
-    alignSelf: "center",
-    width: "100%",
-    height: 50,
-    marginTop: 20,
-  },
-  signUpButtonText: {
-    fontSize: 15,
-    fontWeight: "500",
-    color: "#ffffff",
   },
 });
 
