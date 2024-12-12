@@ -1,4 +1,4 @@
-Project 3
+roject 3
 
 ### Existing Features:
 - Tracking user nutrition per week with an animated donut chart.  
@@ -15,8 +15,7 @@ $ git clone https://github.com/BanhMilos/Project3
 $ cd react-native-iShiWuPai  
 $ npm install  
 $ react-native run-ios / run-android
-
-### Related Third-Party Libraries:
+Related Third-Party Libraries:
 @react-native-community/masked-view
 @react-native-community/netinfo
 @react-navigation/bottom-tabs
