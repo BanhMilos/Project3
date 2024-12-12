@@ -11,7 +11,7 @@ Top Tab title switching animations (scale and color transitions) in the Explore 
 
 
 How to Run:
-$ git clone https://github.com/ljunb/react-native-iShiWuPai.git
+$ git clone https://github.com/BanhMilos/Project3
 $ cd react-native-iShiWuPai
 $ npm install
 $ react-native run-ios / run-android
