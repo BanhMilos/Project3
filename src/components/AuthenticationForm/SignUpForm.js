@@ -47,10 +47,9 @@ const SignUpForm = ({ onBack }) => {
         initialized: true,
       });
       await setDoc(
-        doc(collection(db, "User", user.uid, "WeeklyProgress"), "init"),
+        doc(collection(db, "User", user.uid, "DailyProgress"), "init"),
         { initialized: true }
       );
-
       console.log("User signed up successfully");
       setUserUID(user.uid);
       navigation.navigate("Allergic");

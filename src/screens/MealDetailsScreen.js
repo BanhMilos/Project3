@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -10,10 +10,11 @@ import {
 import CustomButton from "../components/Util/CustomButton";
 import * as scale from "./scale";
 import DognutChart from "../components/Util/DognutChart";
+import { UserContext } from "../context/UserContext";
 
 const MealDetailsScreen = ({ navigation }) => {
   const [opacity, setOpacity] = useState(0);
-
+  const { userUID } = useContext(UserContext);
   const handleScroll = (e) => {
     const offsetY = e.nativeEvent.contentOffset.y;
     const newOpacity = Math.min(offsetY / 225, 1);
@@ -50,7 +51,7 @@ const MealDetailsScreen = ({ navigation }) => {
           <DognutChart
             calories={346}
             unit={"cal"}
-            series={[51, 39, 9.4]}
+            series={[51, 39, 10]}
             sliceColor={["#55bfb5", "#b878e2", "#fdb853"]}
             widthAndHeight={75}
             fontCaloriesSize={17}
@@ -91,10 +92,10 @@ const MealDetailsScreen = ({ navigation }) => {
 
         <Text style={styles.subTitle}>Directions</Text>
         {[
-          "1. Combine the tomatoes, olive oil, vinegar, garlic, and crushed red pepper in a bowl...",
-          "2. Using a vegetable peeler, shave zucchini into ribbons...",
-          "3. Boil pasta until al dente and mix with other ingredients...",
-          "4. Garnish with basil, Parmesan, and sea salt. Serve warm.",
+          "1. Combine the tomatoes, olive oil, vinegar, garlic, and crushed red pepper in a bowl",
+          "2. Using a vegetable peeler, shave zucchini into ribbons",
+          "3. Boil pasta until al dente and mix with other ingredients",
+          "4. Garnish with basil, Parmesan, and sea salt. Serve warm",
         ].map((step, index) => (
           <Text key={index} style={styles.directionText}>
             {step}
@@ -117,6 +118,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    paddingBottom: 500,
   },
   recipeImage: {
     width: "100%",
