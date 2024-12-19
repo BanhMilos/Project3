@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -10,8 +10,9 @@ import {
 import { Ionicons } from "react-native-vector-icons";
 import { auth } from "../../../firebase";
 import { useNavigation } from "@react-navigation/native";
-
+import { UserContext } from "../../context/UserContext";
 const SignInForm = ({ onBack }) => {
+  const { setUserUID } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,10 +26,8 @@ const SignInForm = ({ onBack }) => {
       );
       const userUID = userCredentials.user.uid;
       console.log("User logged in: ", userCredentials.user.email);
-      navigation.navigate("Home", {
-        screen: "Today",
-        params: { uid: userUID },
-      });
+      setUserUID(userUID);
+      navigation.navigate("Home");
     } catch (error) {
       alert(error.message);
     }

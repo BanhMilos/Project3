@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -8,11 +8,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import ProgressCircle from "../components/Util/ProgressCircle";
-import { useNavigation } from "@react-navigation/native";
+import { UserContext } from "../context/UserContext";
 
-const HomeScreen = ({ route }) => {
-  const navigation = useNavigation();
-  const { uid } = route.params;
+const HomeScreen = ({ navigation }) => {
+  const { userUID } = useContext(UserContext);
+  console.log(userUID);
   return (
     <ScrollView style={styles.container}>
       <View style={styles.contentWrapper}>

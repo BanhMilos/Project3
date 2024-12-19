@@ -20,7 +20,6 @@ const Stack = createStackNavigator();
 
 // Bottom Tab Navigator for Today, Plans, Chat, and More
 const BottomTabs = ({ route }) => {
-  const { uid } = route.params;
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen name="Today" component={HomeScreen} />
