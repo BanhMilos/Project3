@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,15 +6,92 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import ProgressCircle from "../components/Util/ProgressCircle";
 import { UserContext } from "../context/UserContext";
+import {
+  collection,
+  query,
+  getFirestore,
+  orderBy,
+  getDocs,
+  startAfter,
+  limit,
+} from "firebase/firestore";
+import { FlatList } from "react-native-gesture-handler";
 
 const HomeScreen = ({ navigation }) => {
   const { userUID } = useContext(UserContext);
-  console.log(userUID);
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [lastVisible, setLastVisible] = useState(null);
+  const [isEndList, setIsEndList] = useState(false);
+  const fetchRecipes = async () => {
+    console.log("wtf1"); // Log fetched data
+    if (loading) return;
+    setLoading(true);
+    console.log("wtf2");
+
+    let q = query(
+      collection(getFirestore(), "Recipe"),
+      orderBy("name"),
+      limit(5)
+    );
+    console.log("wtf3");
+
+    if (lastVisible) {
+      q = query(q, startAfter(lastVisible));
+    }
+    console.log("wtf4");
+
+    try {
+      const querySnapshot = await getDocs(q);
+      console.log("wtf5");
+      if (querySnapshot.empty) {
+        console.log("No more recipes to fetch");
+        setLoading(false);
+        setIsEndList(true);
+        return; // Exit the function
+      }
+      const newRecipes = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log("wtf6");
+
+      setRecipes((prevRecipes) => [...prevRecipes, ...newRecipes]);
+      console.log("wtf7");
+
+      setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
+      console.log("wtf8");
+    } catch (error) {
+      console.error("Error fetching recipes: ", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRecipes();
+  }, []);
+  useEffect(() => {
+    console.log("Updated recipes:", recipes);
+  }, [recipes]);
+  const handleEndReached = () => {
+    if (!loading && !isEndList) {
+      fetchRecipes();
+    }
+  };
+  const renderItem = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => navigation.navigate("Meal", { recipeId: item.id })}
+    >
+      <Image source={{ uri: item.imageUrl }} style={styles.foodImage} />
+    </TouchableOpacity>
+  );
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.contentWrapper}>
         {/* Header Section */}
         <View style={styles.header}>
@@ -68,23 +145,22 @@ const HomeScreen = ({ navigation }) => {
 
         {/* Food Images Section */}
         <View style={styles.imageContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate("Meal")}>
-            <Image
-              source={require("../../assets/images/placeholder.png")}
-              style={styles.foodImage}
-            />
-          </TouchableOpacity>
-          <Image
-            source={require("../../assets/images/placeholder.png")}
-            style={styles.foodImage}
-          />
-          <Image
-            source={require("../../assets/images/placeholder.png")}
-            style={styles.foodImage}
+          <FlatList
+            data={recipes}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id || item.key} // Ensure unique keys
+            onEndReached={handleEndReached}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={
+              loading ? (
+                <ActivityIndicator size="large" color="#0000ff" />
+              ) : null
+            }
+            contentContainerStyle={{ paddingBottom: 200 }} // Add padding if items are hidden
           />
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

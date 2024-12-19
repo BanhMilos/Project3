@@ -12,7 +12,9 @@ import * as scale from "./scale";
 import DognutChart from "../components/Util/DognutChart";
 import { UserContext } from "../context/UserContext";
 
-const MealDetailsScreen = ({ navigation }) => {
+const MealDetailsScreen = ({ navigation, route }) => {
+  const { recipeId } = route.params;
+  console.log(recipeId);
   const [opacity, setOpacity] = useState(0);
   const { userUID } = useContext(UserContext);
   const handleScroll = (e) => {
@@ -101,6 +103,7 @@ const MealDetailsScreen = ({ navigation }) => {
             {step}
           </Text>
         ))}
+        <View style={{ paddingBottom: 120 }} />
       </ScrollView>
 
       <View style={[styles.headerWrapper, { opacity }]} />
@@ -118,7 +121,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingBottom: 500,
   },
   recipeImage: {
     width: "100%",
