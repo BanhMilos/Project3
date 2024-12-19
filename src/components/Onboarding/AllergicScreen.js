@@ -6,16 +6,13 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import allergenData from "./allergenData"; // Your allergen data
+import allergenData from "./allergenData";
 import * as scale from "../../screens/scale";
 import CustomButton from "../Util/CustomButton";
-import { useNavigation } from "@react-navigation/native";
 
-const AlergicScreen = () => {
-  const [selected, setSelected] = useState([]); // Track selected allergens
-  const navigation = useNavigation();
+const AlergicScreen = ({ navigation }) => {
+  const [selected, setSelected] = useState([]);
 
-  // Handle allergen selection
   const handlePress = (item) => {
     setSelected((prevSelected) =>
       prevSelected.includes(item.text)
@@ -24,7 +21,6 @@ const AlergicScreen = () => {
     );
   };
 
-  // Render individual allergen button
   const renderButton = (item) => {
     const isSelected = selected.includes(item.text);
     return (

@@ -2,11 +2,9 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
 import * as scale from "../../screens/scale";
 import CustomButton from "../Util/CustomButton";
-import { useNavigation } from "@react-navigation/native";
 
-const GoalScreen = () => {
+const GoalScreen = ({ navigation }) => {
   const [selectedGoal, setSelectedGoal] = useState(null);
-  const navigation = useNavigation();
 
   const handleGoalSelect = (goal) => setSelectedGoal(goal);
 

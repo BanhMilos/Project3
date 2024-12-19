@@ -7,13 +7,11 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import CustomButton from "../components/Util/CustomButton";
 import * as scale from "./scale";
 import DognutChart from "../components/Util/DognutChart";
 
-const MealDetailsScreen = () => {
-  const navigation = useNavigation();
+const MealDetailsScreen = ({ navigation }) => {
   const [opacity, setOpacity] = useState(0);
 
   const handleScroll = (e) => {

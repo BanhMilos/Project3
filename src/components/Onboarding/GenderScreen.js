@@ -2,11 +2,9 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
 import * as scale from "../../screens/scale";
 import CustomButton from "../Util/CustomButton";
-import { useNavigation } from "@react-navigation/native";
 
-const GenderScreen = () => {
+const GenderScreen = ({ navigation }) => {
   const [selectedGender, setSelectedGender] = useState(null);
-  const navigation = useNavigation();
 
   const renderGenderOption = (gender, imageSource, label) => (
     <TouchableOpacity

@@ -9,11 +9,9 @@ import {
 } from "react-native";
 import * as scale from "./scale";
 import CustomButton from "../components/Util/CustomButton";
-import { useNavigation } from "@react-navigation/native";
 
-export default function PlanDetailsScreen() {
+export default function PlanDetailsScreen({ navigation }) {
   const [selectedTab, setSelectedTab] = useState("Overview");
-  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
