@@ -10,9 +10,9 @@ import {
 import ProgressCircle from "../components/Util/ProgressCircle";
 import { useNavigation } from "@react-navigation/native";
 
-const MainScreen = () => {
+const HomeScreen = ({ route }) => {
   const navigation = useNavigation();
-
+  const { uid } = route.params;
   return (
     <ScrollView style={styles.container}>
       <View style={styles.contentWrapper}>
@@ -88,7 +88,7 @@ const MainScreen = () => {
   );
 };
 
-export default MainScreen;
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {

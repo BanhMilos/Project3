@@ -23,12 +23,16 @@ const SignInForm = ({ onBack }) => {
         email,
         password
       );
+      const userUID = userCredentials.user.uid;
       console.log("User logged in: ", userCredentials.user.email);
+      navigation.navigate("Home", {
+        screen: "Today",
+        params: { uid: userUID },
+      });
     } catch (error) {
       alert(error.message);
     }
     setLoading(false);
-    navigation.navigate("Home");
   };
 
   return (

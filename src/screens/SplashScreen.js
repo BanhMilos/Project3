@@ -10,11 +10,9 @@ import CustomButton from "../components/Util/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import * as scale from "./scale";
 import SignInForm from "../components/AuthenticationForm/SignInForm";
-import SignUpForm from "../components/AuthenticationForm/SignUpForm";
 
 const SplashScreen = () => {
   const navigation = useNavigation();
-  const [isLoginFormVisible, setIsLoginFormVisible] = useState(false);
   const [currentForm, setCurrentForm] = useState("default"); // 'default', 'signUp', 'signIn'
 
   const renderForm = () => {
