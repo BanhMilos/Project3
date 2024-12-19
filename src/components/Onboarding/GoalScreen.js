@@ -1,20 +1,31 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import * as scale from "../../screens/scale";
 import CustomButton from "../Util/CustomButton";
+import { getFirestore, doc, updateDoc } from "firebase/firestore";
+import { UserContext } from "../../context/UserContext";
 
 const GoalScreen = ({ navigation }) => {
   const [selectedGoal, setSelectedGoal] = useState(null);
-
-  const handleGoalSelect = (goal) => setSelectedGoal(goal);
-
+  const { userUID } = useContext(UserContext);
+  const handleSave = async () => {
+    try {
+      const userRef = doc(getFirestore(), "User", userUID);
+      await updateDoc(userRef, {
+        goal: selectedGoal,
+      });
+      navigation.navigate("Home");
+    } catch (error) {
+      console.log("Error updating allergens ", error);
+    }
+  };
   const renderGoalCard = (goal, imageSource) => (
     <TouchableOpacity
       style={[
         styles.cardGoal,
         selectedGoal === goal ? styles.selectedCard : styles.unselectedCard,
       ]}
-      onPress={() => handleGoalSelect(goal)}
+      onPress={() => setSelectedGoal(goal)}
     >
       <Text
         style={[
@@ -71,7 +82,7 @@ const GoalScreen = ({ navigation }) => {
           algs={"center"}
           textSize={scale.buttonTextSize}
           pos={"absolute"}
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => handleSave()}
         />
       )}
     </View>

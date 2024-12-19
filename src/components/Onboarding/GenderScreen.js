@@ -1,11 +1,24 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import * as scale from "../../screens/scale";
 import CustomButton from "../Util/CustomButton";
+import { getFirestore, doc, updateDoc } from "firebase/firestore";
+import { UserContext } from "../../context/UserContext";
 
 const GenderScreen = ({ navigation }) => {
   const [selectedGender, setSelectedGender] = useState(null);
-
+  const { userUID } = useContext(UserContext);
+  const handleSave = async () => {
+    try {
+      const userRef = doc(getFirestore(), "User", userUID);
+      await updateDoc(userRef, {
+        gender: selectedGender,
+      });
+      navigation.navigate("Goal");
+    } catch (error) {
+      console.log("Error updating allergens ", error);
+    }
+  };
   const renderGenderOption = (gender, imageSource, label) => (
     <TouchableOpacity
       style={[
@@ -95,7 +108,7 @@ const GenderScreen = ({ navigation }) => {
           algs={"center"}
           textSize={scale.buttonTextSize}
           pos={"absolute"}
-          onPress={() => navigation.navigate("Goal")}
+          onPress={() => handleSave()}
         />
       )}
     </View>
