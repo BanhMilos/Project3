@@ -18,8 +18,9 @@ import {
   getDocs,
   startAfter,
   limit,
+  doc,
+  getDoc,
 } from "firebase/firestore";
-import { FlatList } from "react-native-gesture-handler";
 
 const HomeScreen = ({ navigation }) => {
   const { userUID } = useContext(UserContext);
@@ -27,44 +28,66 @@ const HomeScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [lastVisible, setLastVisible] = useState(null);
   const [isEndList, setIsEndList] = useState(false);
+  const [isTodayHaveProgress, setIsTodayHaveProgress] = useState(false);
+  const [todayProgress, setTodayProgress] = useState(null);
+  const fetchTodayProgress = async () => {
+    setLoading(true);
+    const today = new Date();
+    const formattedDate = `${String(today.getDate()).padStart(2, "0")}.${String(
+      today.getMonth() + 1
+    ).padStart(2, "0")}.${today.getFullYear()}`;
+    console.log(formattedDate);
+    try {
+      const progressRef = doc(
+        getFirestore(),
+        "User",
+        userUID,
+        "DailyProgress",
+        formattedDate
+      );
+      const progressDoc = await getDoc(progressRef);
+      if (progressDoc.exists()) {
+        console.log("Today's progress:", progressDoc.data());
+        setIsTodayHaveProgress(true);
+        setTodayProgress(progressDoc.data());
+        console.log("No progress found for today.");
+      }
+    } catch (error) {
+      console.error("Error fetching progress:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const fetchRecipes = async () => {
-    console.log("wtf1"); // Log fetched data
     if (loading) return;
     setLoading(true);
-    console.log("wtf2");
 
     let q = query(
       collection(getFirestore(), "Recipe"),
       orderBy("name"),
       limit(5)
     );
-    console.log("wtf3");
 
     if (lastVisible) {
       q = query(q, startAfter(lastVisible));
     }
-    console.log("wtf4");
 
     try {
       const querySnapshot = await getDocs(q);
-      console.log("wtf5");
       if (querySnapshot.empty) {
         console.log("No more recipes to fetch");
         setLoading(false);
         setIsEndList(true);
-        return; // Exit the function
+        return;
       }
       const newRecipes = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      console.log("wtf6");
 
       setRecipes((prevRecipes) => [...prevRecipes, ...newRecipes]);
-      console.log("wtf7");
 
       setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
-      console.log("wtf8");
     } catch (error) {
       console.error("Error fetching recipes: ", error);
     } finally {
@@ -74,6 +97,7 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchRecipes();
+    fetchTodayProgress();
   }, []);
   useEffect(() => {
     console.log("Updated recipes:", recipes);
@@ -83,15 +107,20 @@ const HomeScreen = ({ navigation }) => {
       fetchRecipes();
     }
   };
-  const renderItem = ({ item }) => (
+  const renderItem = (recipe) => (
     <TouchableOpacity
-      onPress={() => navigation.navigate("Meal", { recipeId: item.id })}
+      key={recipe.id}
+      onPress={() => navigation.navigate("Meal", { recipeId: recipe.id })}
     >
-      <Image source={{ uri: item.imageUrl }} style={styles.foodImage} />
+      <Image source={{ uri: recipe.imageUrl }} style={styles.foodImage} />
     </TouchableOpacity>
   );
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      onMomentumScrollEnd={handleEndReached}
+      contentContainerStyle={{ paddingBottom: 16 }}
+    >
       <View style={styles.contentWrapper}>
         {/* Header Section */}
         <View style={styles.header}>
@@ -110,57 +139,63 @@ const HomeScreen = ({ navigation }) => {
             <Text style={styles.viewMore}>View more</Text>
           </View>
 
-          <View style={styles.macroContainer}>
-            <View style={styles.caloriesWrapper}>
-              <Text style={styles.caloriesText}>Calories</Text>
-              <Text style={styles.caloriesAmount}>1,284</Text>
-            </View>
-            <ProgressCircle
-              targetPercentage={65}
-              nutrient="Pro"
-              color1="#A7C7E7"
-              color2="#4682B4"
-              color3="#1C3D72"
-            />
-            <ProgressCircle
-              targetPercentage={29}
-              nutrient="Fat"
-              color1="#F1C27D"
-              color2="#D4AF37"
-              color3="#C68E17"
-            />
-            <ProgressCircle
-              targetPercentage={85}
-              nutrient="Carb"
-              color1="#D9EAD3"
-              color2="#4CAF50"
-              color3="#2E7D32"
-            />
-          </View>
+          {isTodayHaveProgress ? (
+            <>
+              <View style={styles.macroContainer}>
+                <View style={styles.caloriesWrapper}>
+                  <Text style={styles.caloriesText}>Calories</Text>
+                  <Text style={styles.caloriesAmount}>
+                    {todayProgress.calo}
+                  </Text>
+                </View>
+                <ProgressCircle
+                  targetPercentage={65}
+                  nutrient="Pro"
+                  color1="#A7C7E7"
+                  color2="#4682B4"
+                  color3="#1C3D72"
+                />
+                <ProgressCircle
+                  targetPercentage={29}
+                  nutrient="Fat"
+                  color1="#F1C27D"
+                  color2="#D4AF37"
+                  color3="#C68E17"
+                />
+                <ProgressCircle
+                  targetPercentage={85}
+                  nutrient="Carb"
+                  color1="#D9EAD3"
+                  color2="#4CAF50"
+                  color3="#2E7D32"
+                />
+              </View>
 
-          <Text style={styles.motivationText}>
-            🎉 Keep the pace! You're doing great.
-          </Text>
+              <Text style={styles.motivationText}>
+                🎉 Keep the pace! You're doing great.
+              </Text>
+            </>
+          ) : (
+            <Text style={styles.noProgressText}>
+              You haven't eaten anything today yet.
+            </Text>
+          )}
         </View>
 
         {/* Food Images Section */}
         <View style={styles.imageContainer}>
-          <FlatList
-            data={recipes}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id || item.key} // Ensure unique keys
-            onEndReached={handleEndReached}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={
-              loading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
-              ) : null
-            }
-            contentContainerStyle={{ paddingBottom: 200 }} // Add padding if items are hidden
-          />
+          {recipes.map(renderItem)}
+
+          {loading && (
+            <ActivityIndicator
+              size="large"
+              color="#0000ff"
+              style={{ marginVertical: 20 }}
+            />
+          )}
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

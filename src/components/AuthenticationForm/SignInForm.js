@@ -55,7 +55,6 @@ const SignInForm = ({ onBack }) => {
         <Text style={styles.headerTitle}>Welcome Back</Text>
         <Text style={styles.headerSubtitle}>Please log in to continue</Text>
       </View>
-
       <Text style={styles.inputLabel}>Your email address</Text>
       <TextInput
         placeholder="abcxyz@gmail.com"
@@ -63,7 +62,6 @@ const SignInForm = ({ onBack }) => {
         value={email}
         onChangeText={setEmail}
       />
-
       <Text style={styles.inputLabel}>Your password</Text>
       <TextInput
         placeholder="min 8 characters"
