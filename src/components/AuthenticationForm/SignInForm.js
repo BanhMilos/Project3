@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -10,8 +10,9 @@ import {
 import { Ionicons } from "react-native-vector-icons";
 import { auth } from "../../../firebase";
 import { useNavigation } from "@react-navigation/native";
-
+import { UserContext } from "../../context/UserContext";
 const SignInForm = ({ onBack }) => {
+  const { setUserUID } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,12 +24,14 @@ const SignInForm = ({ onBack }) => {
         email,
         password
       );
+      const userUID = userCredentials.user.uid;
       console.log("User logged in: ", userCredentials.user.email);
+      setUserUID(userUID);
+      navigation.navigate("Home");
     } catch (error) {
       alert(error.message);
     }
     setLoading(false);
-    navigation.navigate("Home");
   };
 
   return (
@@ -52,7 +55,6 @@ const SignInForm = ({ onBack }) => {
         <Text style={styles.headerTitle}>Welcome Back</Text>
         <Text style={styles.headerSubtitle}>Please log in to continue</Text>
       </View>
-
       <Text style={styles.inputLabel}>Your email address</Text>
       <TextInput
         placeholder="abcxyz@gmail.com"
@@ -60,7 +62,6 @@ const SignInForm = ({ onBack }) => {
         value={email}
         onChangeText={setEmail}
       />
-
       <Text style={styles.inputLabel}>Your password</Text>
       <TextInput
         placeholder="min 8 characters"

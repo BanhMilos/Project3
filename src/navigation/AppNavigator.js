@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import MainScreen from "../screens/MainScreen";
+import HomeScreen from "../screens/HomeScreen";
 import PlansScreen from "../screens/PlansScreen";
 import PlanDetailsScreen from "../screens/PlanDetailsScreen";
 import ChatScreen from "../screens/ChatScreen";
@@ -19,13 +19,13 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 // Bottom Tab Navigator for Today, Plans, Chat, and More
-const BottomTabs = () => {
+const BottomTabs = ({ route }) => {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="Today" component={MainScreen} />
+      <Tab.Screen name="Today" component={HomeScreen} />
       <Tab.Screen name="Plans" component={PlansScreen} />
       <Tab.Screen name="Chat" component={ChatScreen} />
-      <Tab.Screen name="More" component={MainScreen} />
+      <Tab.Screen name="More" component={HomeScreen} />
     </Tab.Navigator>
   );
 };

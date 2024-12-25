@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,22 +6,59 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import CustomButton from "../components/Util/CustomButton";
 import * as scale from "./scale";
 import DognutChart from "../components/Util/DognutChart";
+import { UserContext } from "../context/UserContext";
+import { getDoc, doc, getFirestore } from "firebase/firestore";
 
-const MealDetailsScreen = () => {
-  const navigation = useNavigation();
+const MealDetailsScreen = ({ navigation, route }) => {
+  const { recipeId } = route.params;
+  const { userUID } = useContext(UserContext);
   const [opacity, setOpacity] = useState(0);
-
+  const [recipe, setRecipe] = useState(null);
+  const [loading, setLoading] = useState(true);
   const handleScroll = (e) => {
     const offsetY = e.nativeEvent.contentOffset.y;
     const newOpacity = Math.min(offsetY / 225, 1);
     setOpacity(newOpacity);
   };
-
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      try {
+        const recipeRef = doc(getFirestore(), "Recipe", recipeId);
+        const recipeDoc = await getDoc(recipeRef);
+        if (recipeDoc.exists()) {
+          setRecipe(recipeDoc.data());
+        } else console.log("No such recipe found");
+      } catch (error) {
+        console.error("Error fetching recipe: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRecipe();
+  }, [recipeId]);
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <ActivityIndicator
+          style={{ alignSelf: "center" }}
+          size="large"
+          color="#0000ff"
+        />
+      </View>
+    );
+  }
+  if (!recipe) {
+    return (
+      <View>
+        <Text>Recipe not found.</Text>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <ScrollView
@@ -29,30 +66,23 @@ const MealDetailsScreen = () => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        <Image
-          source={require("../../assets/images/placeholder.png")}
-          style={styles.recipeImage}
-        />
+        <Image source={{ uri: recipe.imageUrl }} style={styles.recipeImage} />
 
-        <Text style={styles.title}>
-          No-Cook Tomato Sauce With Zucchini Ribbons and Pasta
-        </Text>
+        <Text style={styles.title}>{recipe.name}</Text>
 
         <View style={styles.tagsContainer}>
-          {["Dinner", "Lunch", "Vegetarian", "Under 500 Calories"].map(
-            (tag, index) => (
-              <Text key={index} style={styles.tag}>
-                {tag}
-              </Text>
-            )
-          )}
+          {recipe.tag.map((tag, index) => (
+            <Text key={index} style={styles.tag}>
+              {tag}
+            </Text>
+          ))}
         </View>
 
         <View style={styles.nutritionContainer}>
           <DognutChart
-            calories={346}
+            calories={recipe.calo}
             unit={"cal"}
-            series={[51, 39, 9.4]}
+            series={[51, 39, 10]}
             sliceColor={["#55bfb5", "#b878e2", "#fdb853"]}
             widthAndHeight={75}
             fontCaloriesSize={17}
@@ -77,31 +107,19 @@ const MealDetailsScreen = () => {
         </View>
 
         <Text style={styles.subTitle}>Ingredients</Text>
-        {[
-          "- 1 pint sungold or cherry tomatoes, halved",
-          "- 1/4 cup olive oil",
-          "- 2 tablespoons red wine or sherry vinegar",
-          "- 1 pinch kosher salt, to taste",
-          "- 1/4 teaspoon crushed red pepper",
-          "- 8 ounces long whole-wheat pasta",
-          "- 2 small zucchinis",
-        ].map((ingredient, index) => (
+        {recipe.ingredient.map((ingredient, index) => (
           <Text key={index} style={styles.ingredientText}>
             {ingredient}
           </Text>
         ))}
 
         <Text style={styles.subTitle}>Directions</Text>
-        {[
-          "1. Combine the tomatoes, olive oil, vinegar, garlic, and crushed red pepper in a bowl...",
-          "2. Using a vegetable peeler, shave zucchini into ribbons...",
-          "3. Boil pasta until al dente and mix with other ingredients...",
-          "4. Garnish with basil, Parmesan, and sea salt. Serve warm.",
-        ].map((step, index) => (
+        {recipe.direction.map((step, index) => (
           <Text key={index} style={styles.directionText}>
             {step}
           </Text>
         ))}
+        <View style={{ paddingBottom: 120 }} />
       </ScrollView>
 
       <View style={[styles.headerWrapper, { opacity }]} />
@@ -159,7 +177,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     marginTop: 8,
-    justifyContent: "space-evenly",
   },
   tag: {
     backgroundColor: "#f3f3f3",

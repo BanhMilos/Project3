@@ -4,7 +4,7 @@ import { GiftedChat, Bubble } from "react-native-gifted-chat";
 import { OPENAI_API_KEY } from "@env";
 import axios from "axios";
 
-const ChatScreen = () => {
+const ChatScreen = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 

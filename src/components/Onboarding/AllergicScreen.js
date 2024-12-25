@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,16 +6,15 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import allergenData from "./allergenData"; // Your allergen data
+import allergenData from "./allergenData";
 import * as scale from "../../screens/scale";
 import CustomButton from "../Util/CustomButton";
-import { useNavigation } from "@react-navigation/native";
+import { UserContext } from "../../context/UserContext";
+import { getFirestore, doc, updateDoc, arrayUnion } from "firebase/firestore";
 
-const AlergicScreen = () => {
-  const [selected, setSelected] = useState([]); // Track selected allergens
-  const navigation = useNavigation();
-
-  // Handle allergen selection
+const AlergicScreen = ({ navigation }) => {
+  const [selected, setSelected] = useState([]);
+  const { userUID } = useContext(UserContext);
   const handlePress = (item) => {
     setSelected((prevSelected) =>
       prevSelected.includes(item.text)
@@ -23,8 +22,18 @@ const AlergicScreen = () => {
         : [...prevSelected, item.text]
     );
   };
-
-  // Render individual allergen button
+  const handleSave = async () => {
+    try {
+      const userRef = doc(getFirestore(), "User", userUID);
+      console.log(userUID);
+      await updateDoc(userRef, {
+        allergic: arrayUnion(...selected),
+      });
+      navigation.navigate("Gender");
+    } catch (error) {
+      console.log("Error updating allergens ", error);
+    }
+  };
   const renderButton = (item) => {
     const isSelected = selected.includes(item.text);
     return (
@@ -86,7 +95,7 @@ const AlergicScreen = () => {
         algs={"center"}
         textSize={scale.buttonTextSize}
         pos={"absolute"}
-        onPress={() => navigation.navigate("Gender")}
+        onPress={() => handleSave()}
       />
     </View>
   );

@@ -9,11 +9,9 @@ import {
   TextInput,
 } from "react-native";
 import plans from "./plans";
-import { useNavigation } from "@react-navigation/native";
 
-export default function PlansScreen() {
+const PlansScreen = ({ navigation }) => {
   const [searchText, setSearchText] = useState("");
-  const nav = useNavigation();
 
   // Filter the plans based on the search text
   const filteredPlans = plans.filter((plan) =>
@@ -59,7 +57,9 @@ export default function PlansScreen() {
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.planCard}
-                onPress={() => nav.navigate("PlanDetails", { planId: item.id })}
+                onPress={() =>
+                  navigation.navigate("PlanDetails", { planId: item.id })
+                }
               >
                 <Image source={item.image} style={styles.planImage} />
                 <View style={styles.contentWrapper}>
@@ -73,7 +73,9 @@ export default function PlansScreen() {
       </View>
     </View>
   );
-}
+};
+
+export default PlansScreen;
 
 const styles = StyleSheet.create({
   container: {

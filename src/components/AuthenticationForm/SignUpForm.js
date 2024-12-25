@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -8,14 +8,18 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "react-native-vector-icons";
-import { auth, db } from "../../../firebase";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { useNavigation } from "@react-navigation/native";
+import { UserContext } from "../../context/UserContext";
+import { getFirestore, doc, setDoc, collection } from "firebase/firestore";
 
 const SignUpForm = ({ onBack }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const { setUserUID } = useContext(UserContext);
+  const navigation = useNavigation();
   const handleSignUp = async () => {
     setLoading(true);
     if (password !== confirmPassword) {
@@ -24,33 +28,31 @@ const SignUpForm = ({ onBack }) => {
       return;
     }
     try {
-      const userCredentials = await auth.createUserWithEmailAndPassword(
+      const userCredentials = await createUserWithEmailAndPassword(
+        getAuth(),
         email,
         password
       );
       const user = userCredentials.user;
 
-      await db.collection("User").doc(user.uid).set({
+      const db = getFirestore();
+      await setDoc(doc(db, "User", user.uid), {
         allergic: [],
         currentPlan: "",
         gender: 0,
         goal: 0,
       });
 
-      await db
-        .collection("User")
-        .doc(user.uid)
-        .collection("Meals")
-        .doc("init")
-        .set({ initialized: true });
-      await db
-        .collection("User")
-        .doc(user.uid)
-        .collection("WeeklyProgress")
-        .doc("init")
-        .set({ initialized: true });
-
+      await setDoc(doc(collection(db, "User", user.uid, "Meals"), "init"), {
+        initialized: true,
+      });
+      await setDoc(
+        doc(collection(db, "User", user.uid, "DailyProgress"), "init"),
+        { initialized: true }
+      );
       console.log("User signed up successfully");
+      setUserUID(user.uid);
+      navigation.navigate("Allergic");
     } catch (error) {
       alert(error.message);
     }
